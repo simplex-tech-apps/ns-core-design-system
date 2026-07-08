@@ -10,9 +10,11 @@ import SwiftUI
 import Combine
 
 public struct NATextField: View {
-    
     //MARK: Observed Properties
-    @Binding var value: String
+    @State
+    private var appTheme = AppThemeManager.shared
+    @Binding
+    var value: String
     
     //MARK: Stored Properties
     var placeHolder: String
@@ -96,7 +98,7 @@ public struct NATextField: View {
         VStack {
             HStack {
                 ZStack {
-                    Rectangle().foregroundColor(AppThemeManager.current.onPrimary)
+                    Rectangle().foregroundColor(appTheme.current.onPrimary)
                     Text(placeHolder).font(.system(size: 12, weight: .regular)).padding(.horizontal, 12)
                 }.fixedSize()
                 Spacer()

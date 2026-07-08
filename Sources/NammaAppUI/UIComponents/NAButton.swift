@@ -4,12 +4,15 @@
 import SwiftUI
 
 public struct NAButton: View {
-    // Stored Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var buttonType: NAButtonTypes
     var enableLoader: Bool = false
     var onTap: () -> Void
     
-    // Observed Properties
+    //MARK: Observed Properties
     @Binding var input: String
     @Binding var showLoader: Bool
     
@@ -38,7 +41,7 @@ public struct NAButton: View {
                 onTap()
             }
         case .shopNow:
-            NAStaticButton(showLoader: $showLoader, staticButtonType: .capsule(takeFullWidth: false, title: "Shop now", icon: "chevron.forward", height: 30, backgroundColor: AppThemeManager.current.secondary.opacity(0.1), foregroundColor: AppThemeManager.current.secondary), onTap: onTap)
+            NAStaticButton(showLoader: $showLoader, staticButtonType: .capsule(takeFullWidth: false, title: "Shop now", icon: "chevron.forward", height: 30, backgroundColor: appTheme.current.secondary.opacity(0.1), foregroundColor: appTheme.current.secondary), onTap: onTap)
         case .placeOrder:
             NADynamicButton(input: $input, buttonType: .placeOrder, onTap: onTap)
         case .cartCount:
@@ -78,16 +81,19 @@ public struct NAButton: View {
                 onTap()
             }
         case .shopOffer:
-            NAStaticButton(showLoader: $showLoader, staticButtonType: .capsule(takeFullWidth: true, title: "Shop Offers", icon: "", height: 40, backgroundColor: AppThemeManager.current.tertiary, foregroundColor: AppThemeManager.current.onTertiary), onTap: onTap)
+            NAStaticButton(showLoader: $showLoader, staticButtonType: .capsule(takeFullWidth: true, title: "Shop Offers", icon: "", height: 40, backgroundColor: appTheme.current.tertiary, foregroundColor: appTheme.current.onTertiary), onTap: onTap)
         }
     }
 }
 
 public struct NAStaticButton: View {
-    // Observed Properties
-    @Binding var showLoader: Bool
+    //MARK: Observed Properties
+    @Binding
+    var showLoader: Bool
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Stored Properties
+    //MARK: Stored Properties
     var staticButtonType: StaticButtonTypes = StaticButtonTypes.plain(.filled, .white, .black, "")
     var enableLoader: Bool = false
     var iconFrameSize: CGSize = CGSize(width: 16, height: 14)
@@ -151,11 +157,13 @@ public struct NAStaticButton: View {
 }
 
 public struct NADynamicButton: View {
+    //MARK: Observed Properties
+    @Binding
+    var input: String
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Observed Properties
-    @Binding var input: String
-    
-    // Stored Properties
+    //MARK: Stored Properties
     var buttonType: DynamicButtonTypes = DynamicButtonTypes.placeOrder
     var onTap: () -> Void
     
@@ -188,11 +196,13 @@ public struct NADynamicButton: View {
 }
 
 struct BTCheckBox: View {
+    //MARK: Observed Properties
+    @Binding
+    var input: String
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Observed Properties
-    @Binding var input: String
-    
-    // Stored Properties
+    //MARK: Stored Properties
     var onTap: () -> Void
     
     var body: some View {
@@ -200,7 +210,7 @@ struct BTCheckBox: View {
             onTap()
         }) {
             ZStack {
-                Image(systemName: input == "T" ? "checkmark.square.fill" : "square").padding(14).foregroundStyle(AppThemeManager.current.secondary)
+                Image(systemName: input == "T" ? "checkmark.square.fill" : "square").padding(14).foregroundStyle(appTheme.current.secondary)
             }
             .frame(width: 20, height: 20)
         }
@@ -209,11 +219,13 @@ struct BTCheckBox: View {
 
 
 struct BTPlaceOrder: View {
+    //MARK: Observed Properties
+    @Binding
+    var input: String
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Observed Properties
-    @Binding var input: String
-    
-    // Stored Properties
+    //MARK: Stored Properties
     var onTap: () -> Void
     
     var body: some View {
@@ -228,11 +240,11 @@ struct BTPlaceOrder: View {
                     Text("Place Order").font(.footnote)
                     Image(systemName: "arrowtriangle.right.fill").resizable().frame(width: 6, height: 6).padding(.horizontal, 8)
                 }.frame(height: 44)
-                    .background(AppThemeManager.current.primary)
+                    .background(appTheme.current.primary)
                     .cornerRadius(10)
                     .padding(.trailing, 3)
             }.frame(maxWidth: .infinity).frame(height: 50)
-                .background(AppThemeManager.current.secondary)
+                .background(appTheme.current.secondary)
                 .foregroundColor(.white)
                 .cornerRadius(10)
         }
@@ -240,11 +252,13 @@ struct BTPlaceOrder: View {
 }
 
 struct BTCartCount: View {
+    //MARK: Observed Properties
+    @Binding
+    var input: String
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Observed Properties
-    @Binding var input: String
-    
-    // Stored Properties
+    //MARK: Stored Properties
     var onTap: () -> Void
     
     var body: some View {
@@ -254,9 +268,9 @@ struct BTCartCount: View {
             HStack {
                 Text(input).padding(.leading).font(.system(size: 14, weight: .medium))
                 Spacer()
-                Image(systemName: "arrow.forward.square.fill").resizable().frame(width: 20, height: 20).padding(.horizontal, 8).foregroundStyle(AppThemeManager.current.primary)
+                Image(systemName: "arrow.forward.square.fill").resizable().frame(width: 20, height: 20).padding(.horizontal, 8).foregroundStyle(appTheme.current.primary)
             }.frame(maxWidth: .infinity).frame(height: 50)
-                .background(AppThemeManager.current.secondary)
+                .background(appTheme.current.secondary)
                 .foregroundColor(.white)
                 .cornerRadius(10)
         }
@@ -264,8 +278,11 @@ struct BTCartCount: View {
 }
 
 struct BTSearch: View {
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Stored Properties
+    //MARK: Stored Properties
     var placeHolder: String = ""
     var onTap: () -> Void
     
@@ -275,7 +292,7 @@ struct BTSearch: View {
         }) {
             ZStack {
                 HStack(spacing: 0) {
-                    Image(systemName: "magnifyingglass").resizable().frame(width: 20, height: 20).foregroundStyle(AppThemeManager.current.primary).padding(.horizontal)
+                    Image(systemName: "magnifyingglass").resizable().frame(width: 20, height: 20).foregroundStyle(appTheme.current.primary).padding(.horizontal)
                     Text(placeHolder).foregroundStyle(Color.black.opacity(0.3))
                     Spacer()
                 }.frame(height: 44).background(Color.black.opacity(0.05)).padding(.horizontal, 3).cornerRadius(10)

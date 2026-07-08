@@ -9,9 +9,13 @@ import SwiftUI
 import Kingfisher
 
 struct NAListRowViews: View {
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
     var body: some View {
         ZStack {
-            AppThemeManager.current.background.ignoresSafeArea()
+            appTheme.current.background.ignoresSafeArea()
             List {
                 VStack(spacing: 20) {
                     OnboardingUserDetailsRow(name: "Anand Mani", address: "No: 47, Anna 4th st, Indira Nagar Khanu Nagar, Anna 4th street, Chennai - 600078", mobileNumber: "+91-9840381795", userType: "DELIVERY PARTNER")
@@ -39,15 +43,14 @@ struct NAListRowViews: View {
                     }
                     ShopListRowV2(shopName: "Namma Shop", shopImageURL: "", rating: "", totalReviews: ""){
                     }
-                }.listRowSeparator(.hidden).listRowBackground(AppThemeManager.current.background)
+                }.listRowSeparator(.hidden).listRowBackground(appTheme.current.background)
             }.listStyle(.plain)
         }
     }
 }
 
 public struct SettingsOptionRow: View {
-    
-    // Stored Properties
+    //MARK: Stored Properties
     var rowIcon: String
     var title: String
     var subTitle: String
@@ -72,8 +75,11 @@ public struct SettingsOptionRow: View {
 }
 
 public struct OrderStatusHistoryRow: View {
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Stored Properties
+    //MARK: Stored Properties
     var statusId: Int = 3
     
     public init(statusId: Int) {
@@ -87,14 +93,14 @@ public struct OrderStatusHistoryRow: View {
                     ForEach(orderStatusHistoryList, id: \.id) { orderStatus in
                         ZStack {
                             HStack(spacing: 0) {
-                                Image(systemName: "checkmark.circle.fill").resizable().frame(width: 12, height: 12).padding(10).foregroundStyle(orderStatus.id == statusId ? Color.white : orderStatus.id < statusId ? Color.black : Color.clear).background(orderStatus.id == statusId ? AppThemeManager.current.secondary : Color.clear)
+                                Image(systemName: "checkmark.circle.fill").resizable().frame(width: 12, height: 12).padding(10).foregroundStyle(orderStatus.id == statusId ? Color.white : orderStatus.id < statusId ? Color.black : Color.clear).background(orderStatus.id == statusId ? appTheme.current.secondary : Color.clear)
                                 Text(orderStatus.title).padding(.leading, 6).font(.system(size: 10, weight: orderStatus.id == statusId ? .semibold : .regular)).foregroundStyle(orderStatus.id == statusId ? Color.white : orderStatus.id < statusId ? Color.black : Color.gray)
                                 Spacer()
                             }
-                        }.frame(width: 150).background(orderStatus.id == statusId ? AppThemeManager.current.primary : Color.clear).clipShape(RoundedRectangle(cornerRadius: 8))
+                        }.frame(width: 150).background(orderStatus.id == statusId ? appTheme.current.primary : Color.clear).clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                 }.frame(maxHeight: .infinity)
-            }.background(AppThemeManager.current.primary.opacity(0.05))
+            }.background(appTheme.current.primary.opacity(0.05))
             Image("timing_pendulum", bundle: .module)
                 .resizable()
                 .scaledToFit()
@@ -103,7 +109,11 @@ public struct OrderStatusHistoryRow: View {
 }
 
 public struct ShopDetailsRow: View {
-    // Stored Properties
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var butcher: Image = Image(systemName: "person.circle.fill")
     var shopName: String
     var shopAddress: String
@@ -133,7 +143,7 @@ public struct ShopDetailsRow: View {
                     }
                     VStack(spacing: 2) {
                         Text("YOUR DELIVERY PARTNER").font(.system(size: 10, weight: .regular))
-                        Text("Call (\(deliveryPartnerContact)").font(.system(size: 12, weight: .medium)).foregroundStyle(AppThemeManager.current.primary)
+                        Text("Call (\(deliveryPartnerContact)").font(.system(size: 12, weight: .medium)).foregroundStyle(appTheme.current.primary)
                     }
                 }.padding()
             }.frame(maxWidth: .infinity, maxHeight: .infinity).background(Color.black.opacity(0.05)).cornerRadius(8).padding(4)
@@ -142,7 +152,7 @@ public struct ShopDetailsRow: View {
 }
 
 public struct OrderStatusRow: View {
-    // Stored Properties
+    //MARK: Stored Properties
     var title: String
     var subtitle: String
     
@@ -164,7 +174,11 @@ public struct OrderStatusRow: View {
 }
 
 public struct OrderedProductListRow: View {
-    // Stored Properties
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var productNameList: [String]
     var productPriceList: [(String, String)]
     var amountSavedByCustomer: String
@@ -205,7 +219,7 @@ public struct OrderedProductListRow: View {
                         if index == productPriceList.count - 1 {
                             totalPriceRow(billTotal: billTotal)
                                 .frame(height: 20)
-                                .background(AppThemeManager.current.onSecondary)
+                                .background(appTheme.current.onSecondary)
                                 .cornerRadius(4)
                                 .padding(.top)
                         }
@@ -241,17 +255,17 @@ public struct OrderedProductListRow: View {
                 NALabel(
                     labelType: .rupess(
                         displayRupeesFor: .amountSaved,
-                        textColor: AppThemeManager.current.tertiary,
+                        textColor: appTheme.current.tertiary,
                         amount: amount,
                         isStrikedOut: false
                     )
                 )
                 Text("on this order").font(.system(size: 8, weight: .regular))
             }
-            .foregroundStyle(AppThemeManager.current.tertiary)
+            .foregroundStyle(appTheme.current.tertiary)
             .padding(6)
         }
-        .background(AppThemeManager.current.tertiary.opacity(0.05))
+        .background(appTheme.current.tertiary.opacity(0.05))
         .cornerRadius(6)
     }
     
@@ -296,8 +310,7 @@ public struct CheckoutProductListRow: View {
 }
 
 public struct ShopListRowV1: View {
-    
-    // Stored Properties
+    //MARK: Stored Properties
     var onClickShopNow: () -> ()
     var shopName: String
     var shopImageURL: String
@@ -331,8 +344,11 @@ public struct ShopListRowV1: View {
 }
 
 public struct ShopListRowV2: View {
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Stored Properties
+    //MARK: Stored Properties
     var onClickShopNow: () -> ()
     var shopName: String
     var shopImageURL: String
@@ -357,14 +373,14 @@ public struct ShopListRowV2: View {
                         .cornerRadius(12)
                     HStack {
                         HStack(alignment: VerticalAlignment.center, spacing: 0) {
-                            Image(systemName: "star.fill").resizable().frame(width: 12, height: 12).padding(.leading, 10).foregroundColor(AppThemeManager.current.tertiary)
-                            Text(rating).font(.system(size: 12, weight: .medium)).padding(.leading, 8).foregroundStyle(AppThemeManager.current.secondary)
+                            Image(systemName: "star.fill").resizable().frame(width: 12, height: 12).padding(.leading, 10).foregroundColor(appTheme.current.tertiary)
+                            Text(rating).font(.system(size: 12, weight: .medium)).padding(.leading, 8).foregroundStyle(appTheme.current.secondary)
                             Text("(\(totalReviews))").font(.system(size: 12, weight: .medium)).padding(.trailing, 10).foregroundStyle(Color.gray)
                         }.frame(height: 30)
-                            .background(AppThemeManager.current.onSecondary)
+                            .background(appTheme.current.onSecondary)
                             .cornerRadius(15)
                         Spacer()
-                        NAButton(buttonType: .markFavouriteIcon(foregroundColor: AppThemeManager.current.onSecondary, backgroundColor: AppThemeManager.current.secondary, imageName: "heart", iconButtonShape: .circle)) {
+                        NAButton(buttonType: .markFavouriteIcon(foregroundColor: appTheme.current.onSecondary, backgroundColor: appTheme.current.secondary, imageName: "heart", iconButtonShape: .circle)) {
                             
                         }
                     }.padding(8)
@@ -382,10 +398,14 @@ public struct ShopListRowV2: View {
 }
 
 public struct ProductListRowV2: View {
-    // Observed Properties
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Observed Properties
     @State private var isExpanded = false
     
-    // Stored Properties
+    //MARK: Stored Properties
     var quantity: String
     var unitsOfMeasure: String
     var actualPrice: String
@@ -397,12 +417,12 @@ public struct ProductListRowV2: View {
     var onTapAdd: () -> Void
     var onTapSubtract: () -> Void
     
-    // Computed Properties
+    //MARK: Computed Properties
     var isStartedAddingProduct: Bool {
         (Double(quantity) ?? 0.0) > 0.0
     }
     
-    // Initializer
+    //MARK: Initializer
     public init(quantity: String, unitsOfMeasure: String, actualPrice: String, offeredPrice: String, productName: String, productImageURL: String, productDescription: String, onTapStartAdding: @escaping () -> Void, onTapAdd: @escaping () -> Void, onTapSubtract: @escaping () -> Void) {
         self.quantity = quantity
         self.unitsOfMeasure = unitsOfMeasure
@@ -432,14 +452,14 @@ public struct ProductListRowV2: View {
                 Button(action: {}) {
                     Text("ADD +")
                         .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(AppThemeManager.current.primary)
+                        .foregroundColor(appTheme.current.primary)
                         .frame(width: 75, height: 34)
                         .background(Color.white)
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                         .overlay {
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(
-                                    AppThemeManager.current.primary,
+                                    appTheme.current.primary,
                                     lineWidth: 1
                                 )
                         }
@@ -462,7 +482,7 @@ public struct ProductListRowV2: View {
 
                 Text("\(quantity) \(unitsOfMeasure)")
                     .font(.system(size: 13, weight: .medium))
-                    .foregroundColor(AppThemeManager.current.secondary)
+                    .foregroundColor(appTheme.current.secondary)
             }
             .padding(.horizontal, 8)
 
@@ -483,7 +503,7 @@ public struct ProductListRowV2: View {
                         isExpanded = true
                     }
                     .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(AppThemeManager.current.secondary)
+                    .foregroundColor(appTheme.current.secondary)
                 }
             }
             .padding(.horizontal, 8)
@@ -497,7 +517,11 @@ public struct ProductListRowV2: View {
 }
 
 public struct ProductListRowV1: View {
-    // Stored Properties
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var quantity: String
     var actualPricePerUnitOfMeasure: String
     var actualPrice: String
@@ -509,12 +533,12 @@ public struct ProductListRowV1: View {
     var onTapAdd: () -> Void
     var onTapSubtract: () -> Void
     
-    // Computed Properties
+    //MARK: Computed Properties
     var isStartedAddingProduct: Bool {
         (Double(quantity) ?? 0.0) > 0.0
     }
     
-    // Initializer
+    //MARK: Initializer
     public init(quantity: String, actualPricePerUnitOfMeasure: String, actualPrice: String, offeredPrice: String, productName: String, productImageURL: String, productDescription: String, onTapStartAdding: @escaping () -> Void, onTapAdd: @escaping () -> Void, onTapSubtract: @escaping () -> Void) {
         self.quantity = quantity
         self.actualPricePerUnitOfMeasure = actualPricePerUnitOfMeasure
@@ -566,23 +590,27 @@ public struct ProductListRowV1: View {
                             }
                             .padding(10).padding(.horizontal, 6)
                             .font(.system(size: 12, weight: .medium))
-                            .background(AppThemeManager.current.primary.opacity(0.1))
-                            .foregroundColor(AppThemeManager.current.primary)
+                            .background(appTheme.current.primary.opacity(0.1))
+                            .foregroundColor(appTheme.current.primary)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
-                                    .stroke(AppThemeManager.current.primary, lineWidth: 1)
+                                    .stroke(appTheme.current.primary, lineWidth: 1)
                             )
                             .padding(4)
                         }
                     }
-                }.background(AppThemeManager.current.primary.opacity(isStartedAddingProduct ? 0.1 : 0.0)).cornerRadius(8)
+                }.background(appTheme.current.primary.opacity(isStartedAddingProduct ? 0.1 : 0.0)).cornerRadius(8)
             }.padding(.top, 6)
         }.fixedSize(horizontal: false, vertical: true).padding(4).addCardViewEffectV2()
     }
 }
 
 public struct ManageProductQuantityRow: View {
-    // Stored Properties
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var onTapAdd: () -> Void
     var onTapSubtract: () -> Void
     var quantity: String
@@ -607,15 +635,19 @@ public struct ManageProductQuantityRow: View {
                     .font(.system(size: 14, weight: .medium))
             }
         }
-        .background(AppThemeManager.current.primary)
-        .foregroundColor(AppThemeManager.current.onPrimary)
+        .background(appTheme.current.primary)
+        .foregroundColor(appTheme.current.onPrimary)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         
     }
 }
 
 public struct OnboardingUserDetailsRow: View {
-    // Stored Properties
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var name: String
     var address: String
     var mobileNumber: String
@@ -635,16 +667,16 @@ public struct OnboardingUserDetailsRow: View {
             Image(systemName: "person.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .foregroundStyle(AppThemeManager.current.onPrimary)
+                .foregroundStyle(appTheme.current.onPrimary)
                 .padding(16)
                 .frame(width: 50, height: 50)
-                .background(AppThemeManager.current.primary)
+                .background(appTheme.current.primary)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(name).font(.system(size: 16, weight: .medium))
                     Spacer()
-                    Text(userType).font(.system(size: 10, weight: .medium)).foregroundStyle(AppThemeManager.current.tertiary)
+                    Text(userType).font(.system(size: 10, weight: .medium)).foregroundStyle(appTheme.current.tertiary)
                 }
                 Text(address).font(.system(size: 12, weight: .regular)).lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
@@ -658,11 +690,14 @@ public struct OnboardingUserDetailsRow: View {
 }
 
 public struct PlaceOrderRow: View {
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Observed Properties
+    //MARK: Observed Properties
     var totalAmount: String
     
-    // Stored Properties
+    //MARK: Stored Properties
     var onTap: () -> Void
     
     public init(totalAmount: String, onTap: @escaping () -> Void) {
@@ -676,66 +711,69 @@ public struct PlaceOrderRow: View {
         }) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("PAY USING").font(.system(size: 10, weight: .semibold)).foregroundStyle(AppThemeManager.current.onSecondary)
-                    Text("Cash on delivery").font(.system(size: 12, weight: .regular)).foregroundStyle(AppThemeManager.current.primary)
+                    Text("PAY USING").font(.system(size: 10, weight: .semibold)).foregroundStyle(appTheme.current.onSecondary)
+                    Text("Cash on delivery").font(.system(size: 12, weight: .regular)).foregroundStyle(appTheme.current.primary)
                 }.padding(.horizontal)
                 Spacer()
                 HStack(alignment: .center, spacing: 0) {
-                    NALabel(labelType: .rupess(displayRupeesFor: .placeOrder, textColor: AppThemeManager.current.secondary, amount: totalAmount, isStrikedOut: false)).padding(.horizontal, 8)
+                    NALabel(labelType: .rupess(displayRupeesFor: .placeOrder, textColor: appTheme.current.secondary, amount: totalAmount, isStrikedOut: false)).padding(.horizontal, 8)
                     Spacer()
                     Text("Place Order").font(.footnote)
                     Image(systemName: "arrowtriangle.right.fill").resizable().frame(width: 6, height: 6).padding(.horizontal, 8)
                 }
                 .frame(height: 48)
-                .background(AppThemeManager.current.onSecondary)
-                .foregroundStyle(AppThemeManager.current.secondary)
+                .background(appTheme.current.onSecondary)
+                .foregroundStyle(appTheme.current.secondary)
                 .cornerRadius(10)
                 .padding(.trailing, 3).padding(.leading)
             }
             .frame(maxWidth: .infinity).frame(height: 54)
-            .background(AppThemeManager.current.secondary)
-            .foregroundColor(AppThemeManager.current.onSecondary)
+            .background(appTheme.current.secondary)
+            .foregroundColor(appTheme.current.onSecondary)
             .cornerRadius(10)
         }
     }
 }
 
 public struct ProceedToCheckoutRow: View {
+    //MARK: Observed Properties
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Observed Properties
+    //MARK: Observed Properties
     var title: String
     var cartCount: String
     var ordersCount: String
     
-    // Stored Properties
+    //MARK: Stored Properties
     var checkoutVersion: ProceedToCheckoutRowVersions
     var onTap: (Int) -> Void
     
-    // Computed Properties
+    //MARK: Computed Properties
     var backgroundColor: Color {
         switch(checkoutVersion) {
         case .homeCheckout, .homeTrackOrders, .homeCheckoutWithAllComponent, .homeCheckoutWithShowAll, .homeCheckoutWithTrackOrders, .shopCheckout:
-            AppThemeManager.current.secondary
+            appTheme.current.secondary
         case .showAllListCheckout:
-            AppThemeManager.current.onSecondary
+            appTheme.current.onSecondary
         }
     }
     
     var checkoutBackgroundColor: Color {
         switch(checkoutVersion) {
         case .homeCheckout, .homeTrackOrders, .homeCheckoutWithAllComponent, .homeCheckoutWithShowAll, .homeCheckoutWithTrackOrders, .shopCheckout:
-            AppThemeManager.current.onSecondary
+            appTheme.current.onSecondary
         case .showAllListCheckout:
-            AppThemeManager.current.secondary
+            appTheme.current.secondary
         }
     }
     
     var checkoutForegroundColor: Color {
         switch(checkoutVersion) {
         case .homeCheckout, .homeTrackOrders, .homeCheckoutWithAllComponent, .homeCheckoutWithShowAll, .homeCheckoutWithTrackOrders, .shopCheckout:
-            AppThemeManager.current.secondary
+            appTheme.current.secondary
         case .showAllListCheckout:
-            AppThemeManager.current.onSecondary
+            appTheme.current.onSecondary
         }
     }
     
@@ -815,14 +853,14 @@ public struct ProceedToCheckoutRow: View {
             VStack(spacing: 0) {
                 if trackOrderVisibility {
                     HStack {
-                        Text("You have \(ordersCount) orders to be delivered").font(.system(size: 12, weight: .medium)).foregroundStyle(AppThemeManager.current.secondary)
+                        Text("You have \(ordersCount) orders to be delivered").font(.system(size: 12, weight: .medium)).foregroundStyle(appTheme.current.secondary)
                         Spacer()
                         Button(action: {
                             onTap(4)
                         }) {
                             HStack {
-                                Text("Track Order").font(.system(size: 12, weight: .medium)).foregroundStyle(AppThemeManager.current.primary)
-                                Image(systemName: "chevron.right").resizable().frame(width: 4, height: 8).foregroundStyle(AppThemeManager.current.primary)
+                                Text("Track Order").font(.system(size: 12, weight: .medium)).foregroundStyle(appTheme.current.primary)
+                                Image(systemName: "chevron.right").resizable().frame(width: 4, height: 8).foregroundStyle(appTheme.current.primary)
                             }
                         }
                     }.padding(.horizontal, 16).padding(.bottom, trackOrderBottomPadding).padding(.top, 16)
@@ -839,8 +877,8 @@ public struct ProceedToCheckoutRow: View {
                                     onTap(3)
                                 }) {
                                     HStack {
-                                        Text("View items").font(.system(size: 10, weight: .regular)).foregroundStyle(AppThemeManager.current.primary)
-                                        Image(systemName: "chevron.right").resizable().frame(width: 4, height: 8).foregroundStyle(AppThemeManager.current.primary)
+                                        Text("View items").font(.system(size: 10, weight: .regular)).foregroundStyle(appTheme.current.primary)
+                                        Image(systemName: "chevron.right").resizable().frame(width: 4, height: 8).foregroundStyle(appTheme.current.primary)
                                     }
                                 }
                             }
@@ -850,21 +888,21 @@ public struct ProceedToCheckoutRow: View {
                             onTap(1)
                         }) {
                             ZStack {
-                                AppThemeManager.current.primary
+                                appTheme.current.primary
                                 HStack {
                                     Image(systemName: "cart").resizable().frame(width: 16, height: 16)
                                         .overlay(
                                             Text(cartCount)
                                                 .font(.system(size: 6, weight: .semibold))
-                                                .foregroundColor(AppThemeManager.current.onSecondary)
+                                                .foregroundColor(appTheme.current.onSecondary)
                                                 .padding(.all, 4)
-                                                .background(AppThemeManager.current.secondary)
+                                                .background(appTheme.current.secondary)
                                                 .clipShape(Circle())
                                                 .offset(x: 6, y: -6),
                                             alignment: .topTrailing
                                         )
                                         .padding(.horizontal, 4)
-                                        .foregroundStyle(AppThemeManager.current.onPrimary)
+                                        .foregroundStyle(appTheme.current.onPrimary)
                                     ZStack {
                                         checkoutBackgroundColor
                                         HStack {
@@ -872,7 +910,7 @@ public struct ProceedToCheckoutRow: View {
                                             Image(systemName: "chevron.right").resizable().frame(width: 4, height: 8).foregroundStyle(checkoutForegroundColor)
                                         }.padding(.horizontal, 8)
                                     }
-                                    .background(AppThemeManager.current.secondary)
+                                    .background(appTheme.current.secondary)
                                     .cornerRadius(10)
                                     .fixedSize(horizontal: true, vertical: false)
                                 }
@@ -898,15 +936,15 @@ public struct ProceedToCheckoutRow: View {
                                     onTap(2)
                                 }) {
                                     HStack {
-                                        Text("Show all").font(.system(size: 10, weight: .medium)).foregroundStyle(AppThemeManager.current.onSecondary)
-                                        Image(systemName: "chevron.up.square.fill").resizable().frame(width: 10, height: 10).foregroundStyle(AppThemeManager.current.onSecondary)
+                                        Text("Show all").font(.system(size: 10, weight: .medium)).foregroundStyle(appTheme.current.onSecondary)
+                                        Image(systemName: "chevron.up.square.fill").resizable().frame(width: 10, height: 10).foregroundStyle(appTheme.current.onSecondary)
                                     }
                                     .padding(8)
-                                    .background(AppThemeManager.current.secondary)
+                                    .background(appTheme.current.secondary)
                                     .cornerRadius(6)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 6)
-                                            .stroke(AppThemeManager.current.onSecondary, lineWidth: 1)
+                                            .stroke(appTheme.current.onSecondary, lineWidth: 1)
                                     )
                                 }
                             } else {
@@ -919,7 +957,7 @@ public struct ProceedToCheckoutRow: View {
                 }
             }
         }
-        .background(trackOrderBackgroundVisibility ? AppThemeManager.current.onSecondary : Color.clear)
+        .background(trackOrderBackgroundVisibility ? appTheme.current.onSecondary : Color.clear)
         .cornerRadius(10)
         .addShadowEffectV3(shadowOpacity: shadowVisibility)
     }

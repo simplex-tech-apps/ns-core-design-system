@@ -8,11 +8,11 @@
 import SwiftUI
 
 public struct NALabel: View {
-    // Stored Properties
+    //MARK: Stored Properties
     var labelType: NALabelTypes
     var isNegativeValue: Bool
     
-    // Initializer
+    //MARK: Initializer
     public init(labelType: NALabelTypes, isNegativeValue: Bool = false) {
         self.labelType = labelType
         self.isNegativeValue = isNegativeValue

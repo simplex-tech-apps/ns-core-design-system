@@ -7,13 +7,16 @@
 import SwiftUI
 
 public struct NAMessageView: View {
-    // Stored Properties
+    @State
+    private var appTheme = AppThemeManager.shared
+    
+    //MARK: Stored Properties
     var title: String
     var subtitle: String
     var icon: String
     var onTapTryAgain: () -> Void
     
-    // Initializer
+    //MARK: Initializer
     public init(title: String, subtitle: String, icon: String = "network_issue", onTapTryAgain: @escaping () -> Void) {
         self.title = title
         self.subtitle = subtitle
@@ -32,9 +35,9 @@ public struct NAMessageView: View {
             Button(action: {
                 onTapTryAgain()
             }) {
-                Text("Try again").font(.system(size: 12, weight: .medium)).foregroundStyle(AppThemeManager.current.primary)
+                Text("Try again").font(.system(size: 12, weight: .medium)).foregroundStyle(appTheme.current.primary)
             }.buttonStyle(.plain)
             Spacer()
-        }.background(AppThemeManager.current.surface)
+        }.background(appTheme.current.surface)
     }
 }

@@ -7,110 +7,88 @@
 
 import SwiftUI
 
-enum AppThemeType {
+public enum AppThemeType {
     case light
     case dark
 }
 
-protocol Theme {
+public protocol Theme {
     var primary: Color { get }
     var onPrimary: Color { get }
+
     var secondary: Color { get }
     var onSecondary: Color { get }
+
     var tertiary: Color { get }
     var onTertiary: Color { get }
+
     var background: Color { get }
     var onBackground: Color { get }
+
     var surface: Color { get }
     var onSurface: Color { get }
+
     var error: Color { get }
     var onError: Color { get }
 }
 
-struct LightTheme: Theme {
-    var primary: Color {
-        Color(hex: 0x4DB848)
-    }
-    var onPrimary: Color {
-        Color.white
-    }
-    var secondary: Color{
-        Color(hex: 0x252731)
-    }
-    var onSecondary: Color{
-        Color.white
-    }
-    var tertiary: Color{
-        Color(hex: 0x624FF5)
-    }
-    var onTertiary: Color{
-        Color.white
-    }
-    var background: Color{
-        Color(hex: 0xF7F8F8)
-    }
-    var onBackground: Color{
-        Color.white
-    }
-    var surface: Color{
-        Color(hex: 0xF7F8F8)
-    }
-    var onSurface: Color{
-        Color(hex: 0x252731)
-    }
-    var error: Color{
-        Color.red
-    }
-    var onError: Color{
-        Color.white
-    }
+public struct LightTheme: Theme {
+
+    public init() {}
+
+    public let primary = Color(hex: 0x4DB848)
+    public let onPrimary = Color.white
+
+    public let secondary = Color(hex: 0x252731)
+    public let onSecondary = Color.white
+
+    public let tertiary = Color(hex: 0x624FF5)
+    public let onTertiary = Color.white
+
+    public let background = Color(hex: 0xF7F8F8)
+    public let onBackground = Color.black
+
+    public let surface = Color(hex: 0xFFFFFF)
+    public let onSurface = Color(hex: 0x252731)
+
+    public let error = Color.red
+    public let onError = Color.white
 }
 
-struct DarkTheme: Theme {
-    var primary: Color {
-        Color.black
-    }
-    var onPrimary: Color {
-        Color.white
-    }
-    var secondary: Color{
-        Color.green
-    }
-    var onSecondary: Color{
-        Color.white
-    }
-    var tertiary: Color{
-        Color.blue
-    }
-    var onTertiary: Color{
-        Color.white
-    }
-    var background: Color{
-        Color.black
-    }
-    var onBackground: Color{
-        Color.black
-    }
-    var surface: Color{
-        Color.black
-    }
-    var onSurface: Color{
-        Color.black
-    }
-    var error: Color{
-        Color.black
-    }
-    var onError: Color{
-        Color.black
-    }
+public struct DarkTheme: Theme {
+
+    public init() {}
+
+    public let primary = Color(hex: 0x4DB848)
+    public let onPrimary = Color.white
+
+    public let secondary = Color(hex: 0xE5E5E5)
+    public let onSecondary = Color.black
+
+    public let tertiary = Color(hex: 0x624FF5)
+    public let onTertiary = Color.white
+
+    public let background = Color.black
+    public let onBackground = Color.white
+
+    public let surface = Color(hex: 0x1C1C1E)
+    public let onSurface = Color.white
+
+    public let error = Color.red
+    public let onError = Color.white
 }
 
-public actor AppThemeManager {
-    static var current: Theme = LightTheme()
-    static func apply(theme: AppThemeType) {
-        switch theme {
-        case .light: current = LightTheme()
-        case .dark: current = DarkTheme()
-        }
+@MainActor
+@Observable
+public final class AppThemeManager {
+
+    public static let shared = AppThemeManager()
+
+    public var current: Theme = LightTheme()
+
+    private init() {}
+
+    public func apply(_ theme: Theme) {
+        current = theme
     }
 }

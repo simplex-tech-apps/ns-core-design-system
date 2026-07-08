@@ -9,21 +9,26 @@ import SwiftUI
 import Kingfisher
 
 struct NAListColumnViews: View {
+    @State
+    private var appTheme = AppThemeManager.shared
+    
     var body: some View {
         ZStack {
-            AppThemeManager.current.background.ignoresSafeArea()
+            appTheme.current.background.ignoresSafeArea()
             List {
                 VStack(spacing: 20) {
                     
-                }.listRowSeparator(.hidden).listRowBackground(AppThemeManager.current.background)
+                }.listRowSeparator(.hidden).listRowBackground(appTheme.current.background)
             }.listStyle(.plain)
         }
     }
 }
 
 public struct ShopCategoryColumn: View {
+    @State
+    private var appTheme = AppThemeManager.shared
     
-    // Stored Properties
+    //MARK: Stored Properties
     var shopCategoryURL: String
     var title: String
     var isSelected: Bool
@@ -51,7 +56,7 @@ public struct ShopCategoryColumn: View {
                 .frame(width: 75, height: 75).addCardViewEffectV1()
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(isSelected ? AppThemeManager.current.primary : Color.clear, lineWidth: 2)
+                        .stroke(isSelected ? appTheme.current.primary : Color.clear, lineWidth: 2)
                 )
                 .overlay(
                     Group {
@@ -59,14 +64,14 @@ public struct ShopCategoryColumn: View {
                             Image(systemName: "checkmark.circle.fill")
                                 .resizable()
                                 .frame(width: 12, height: 12)
-                                .foregroundColor(AppThemeManager.current.primary)
-                                .background(Circle().fill(AppThemeManager.current.onPrimary))
+                                .foregroundColor(appTheme.current.primary)
+                                .background(Circle().fill(appTheme.current.onPrimary))
                                 .padding(4)
                         }
                     },
                     alignment: .topLeading
                 )
-                Text(title).font(.system(size: 10, weight: .medium)).foregroundStyle(AppThemeManager.current.secondary)
+                Text(title).font(.system(size: 10, weight: .medium)).foregroundStyle(appTheme.current.secondary)
             }.fixedSize()
         }.buttonStyle(ScaledButtonStyle())
     }
