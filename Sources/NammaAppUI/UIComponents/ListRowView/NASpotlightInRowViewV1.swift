@@ -55,13 +55,17 @@ public struct NASpotlightInRowViewV1: View {
     }
 }
 
-struct SeeAllButtonViewV1: View {
+public struct SeeAllButtonViewV1: View {
     var action: () -> Void = {}
 
     private let containerBackground = Color.white
     private let darkTextColor = Color(red: 30/255, green: 30/255, blue: 30/255)
     
-    var body: some View {
+    public init(action: @escaping () -> Void) {
+        self.action = action
+    }
+    
+    public var body: some View {
         Button(action: action) {
             HStack {
                 Text("See All")
@@ -93,10 +97,14 @@ struct SeeAllButtonViewV1: View {
     }
 }
 
-struct SeeAllButtonViewV2: View {
+public struct SeeAllButtonViewV2: View {
     var action: () -> Void
     
-    var body: some View {
+    public init(action: @escaping () -> Void) {
+        self.action = action
+    }
+    
+    public var body: some View {
         Button(action: action) {
             HStack(spacing: 4) {
                 Text("See All")

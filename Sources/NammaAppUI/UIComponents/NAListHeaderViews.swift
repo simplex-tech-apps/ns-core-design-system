@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - Header Style Models
-enum HeaderStyle {
+public enum HeaderStyle {
     case standard(title: String, subtitle: String? = nil)
     case seeAll(title: String, actionTitle: String = "View All", onAction: () -> Void)
     case searchBar(placeholder: String, searchText: Binding<String>, onSearchTap: (() -> Void)? = nil)
@@ -17,10 +17,14 @@ enum HeaderStyle {
 }
 
 // MARK: - Reusable Master Header View
-struct ReusableHeaderView: View {
+public struct ReusableHeaderView: View {
     let style: HeaderStyle
     
-    var body: some View {
+    public init(style: HeaderStyle) {
+        self.style = style
+    }
+    
+    public var body: some View {
         switch style {
         case .standard(let title, let subtitle):
             StandardHeaderView(title: title, subtitle: subtitle)
