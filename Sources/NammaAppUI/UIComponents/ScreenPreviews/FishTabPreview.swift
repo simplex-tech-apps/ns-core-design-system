@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FishTabView: View {
+struct FishTabPreview: View {
     @State
     private var appTheme = AppThemeManager.shared
     
@@ -68,5 +68,5 @@ struct FishTabView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    FishTabView()
+    FishTabPreview()
 }

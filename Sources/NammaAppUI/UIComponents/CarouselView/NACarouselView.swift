@@ -25,7 +25,7 @@ struct ProductCarouselModel: Identifiable, Hashable {
     let promotionText: String?
 }
 
-struct NACarouselView: View {
+public struct NACarouselView: View {
     let products = [
         ProductCarouselModel(
             title: "Premium Tender Chicken Curry Cut",
@@ -110,7 +110,7 @@ struct NACarouselView: View {
     
     @State private var activeScrollID: UUID?
     
-    var body: some View {
+    public var body: some View {
         GeometryReader { outerGeometry in
             let screenWidth = outerGeometry.size.width
             let cardWidth: CGFloat = 320

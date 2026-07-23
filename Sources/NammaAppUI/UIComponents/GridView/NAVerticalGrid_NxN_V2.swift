@@ -15,7 +15,7 @@ struct NAVerticalGrid_NxN_V2Model: Identifiable, Hashable {
 }
 
 // MARK: - Main Grid View
-struct NAVerticalGrid_NxN_V2: View {
+public struct NAVerticalGrid_NxN_V2: View {
     let categories: [NAVerticalGrid_NxN_V2Model] = [
         NAVerticalGrid_NxN_V2Model(
             title: "Marine/\nSea",
@@ -60,7 +60,7 @@ struct NAVerticalGrid_NxN_V2: View {
         count: 3
     )
     
-    var body: some View {
+    public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             LazyVGrid(columns: columns, spacing: 8) {
                 ForEach(categories) { category in

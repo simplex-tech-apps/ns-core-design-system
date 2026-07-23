@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FreshTabView: View {
+struct FreshTabPreview: View {
     @State
     private var appTheme = AppThemeManager.shared
     
@@ -124,5 +124,5 @@ struct FreshTabView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    FreshTabView()
+    FreshTabPreview()
 }

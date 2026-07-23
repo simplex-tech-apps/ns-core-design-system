@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FoodTabView: View {
+struct FoodTabPreview: View {
     @State
     private var appTheme = AppThemeManager.shared
     
@@ -174,5 +174,5 @@ struct FoodTabView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    FoodTabView()
+    FoodTabPreview()
 }

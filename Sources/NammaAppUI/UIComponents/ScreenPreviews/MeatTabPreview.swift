@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MeatTabView: View {
+struct MeatTabPreview: View {
     @State
     private var appTheme = AppThemeManager.shared
     
@@ -38,5 +38,5 @@ struct MeatTabView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    MeatTabView()
+    MeatTabPreview()
 }
