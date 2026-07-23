@@ -8,19 +8,37 @@
 import SwiftUI
 import Kingfisher
 
+struct CardPressButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
+            .animation(.easeOut(duration: 0.10), value: configuration.isPressed)
+    }
+}
+
 struct NAListColumnViews: View {
     @State
     private var appTheme = AppThemeManager.shared
     
     var body: some View {
-        ZStack {
-            appTheme.current.background.ignoresSafeArea()
-            List {
-                VStack(spacing: 20) {
+        List {
+            NAStaggeredGridViewV1()
+            NASpotlightInRowViewV1()
+            ForEach(0..<4) { item in
+                NAShopCardViewV1() {
                     
-                }.listRowSeparator(.hidden).listRowBackground(appTheme.current.background)
-            }.listStyle(.plain)
+                }
+            }
+            NASpotlightInRowViewV1()
+            ForEach(0..<3) { item in
+                NAShopCardViewV1() {
+                    
+                }
+            }
+            NASpotlightInRowViewV2()
         }
+        .listStyle(.plain)
+        .listRowSpacing(0)
     }
 }
 
@@ -34,7 +52,12 @@ public struct ShopCategoryColumn: View {
     var isSelected: Bool
     var onClick: () -> Void
     
-    public init(shopCategoryURL: String, title: String, isSelected: Bool, onClick: @escaping () -> Void) {
+    public init(
+        shopCategoryURL: String,
+        title: String,
+        isSelected: Bool,
+        onClick: @escaping () -> Void
+    ) {
         self.shopCategoryURL = shopCategoryURL
         self.title = title
         self.isSelected = isSelected
@@ -56,7 +79,10 @@ public struct ShopCategoryColumn: View {
                 .frame(width: 75, height: 75).addCardViewEffectV1()
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(isSelected ? appTheme.current.primary : Color.clear, lineWidth: 2)
+                        .stroke(
+                            isSelected ? appTheme.current.primary : Color.clear,
+                            lineWidth: 2
+                        )
                 )
                 .overlay(
                     Group {
@@ -65,14 +91,23 @@ public struct ShopCategoryColumn: View {
                                 .resizable()
                                 .frame(width: 12, height: 12)
                                 .foregroundColor(appTheme.current.primary)
-                                .background(Circle().fill(appTheme.current.onPrimary))
+                                .background(
+                                    Circle().fill(appTheme.current.onPrimary)
+                                )
                                 .padding(4)
                         }
                     },
                     alignment: .topLeading
                 )
-                Text(title).font(.system(size: 10, weight: .medium)).foregroundStyle(appTheme.current.secondary)
+                Text(title)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(appTheme.current.secondary)
             }.fixedSize()
         }.buttonStyle(ScaledButtonStyle())
     }
+}
+
+// MARK: - Preview Setup Engine
+#Preview {
+    NAListColumnViews()
 }

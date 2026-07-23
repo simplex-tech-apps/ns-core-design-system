@@ -65,7 +65,7 @@ struct NACardViewEffectV2: ViewModifier {
             content
         }.frame(maxWidth: .infinity)
             .background(Color.white)
-            .cornerRadius(16)
+            .cornerRadius(20)
             .addShadowEffectV2()
     }
 }

@@ -81,9 +81,7 @@ public struct DarkTheme: Theme {
 @MainActor
 @Observable
 public final class AppThemeManager {
-
     public static let shared = AppThemeManager()
-
     public var current: Theme = LightTheme()
 
     private init() {}

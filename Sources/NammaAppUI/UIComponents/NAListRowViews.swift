@@ -964,8 +964,5 @@ public struct ProceedToCheckoutRow: View {
 }
 
 #Preview {
-//    ProceedToCheckoutRow(title: "Test", cartCount: "6", ordersCount: "3", checkoutVersion: 3, onTap: {_ in
-//        
-//    })
     ProductListRowV1(quantity: "0", actualPricePerUnitOfMeasure: "34", actualPrice: "454", offeredPrice: "34", productName: "Test", productImageURL: "", productDescription: "Nothing", onTapStartAdding: {}, onTapAdd: {}, onTapSubtract: {})
 }
