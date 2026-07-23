@@ -136,13 +136,17 @@ public struct NAHorizontalGrid_NxN_V1: View {
     
    public var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHGrid(rows: gridRows, alignment: .top, spacing: 14) {
+            LazyHGrid(rows: gridRows, alignment: .top, spacing: 12) {
                 ForEach($products) { $product in
                     NAHorizontalGrid_NxN_V1_CardView(product: $product)
                         .frame(width: 140)
                 }
+                
             }
+            .padding(.horizontal, 12)
         }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
     }
 }
 

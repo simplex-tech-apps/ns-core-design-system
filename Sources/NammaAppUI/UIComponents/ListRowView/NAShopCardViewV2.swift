@@ -9,8 +9,8 @@ import SwiftUI
 import Kingfisher
 
 // MARK: - Models
-struct NAShopCardViewV2Model: Equatable, Identifiable, Hashable {
-    let id = UUID()
+public struct NAShopCardViewV2Model: Equatable, Identifiable, Hashable {
+    public let id = UUID()
     let imageName: String
     let discountText: String
     let deliveryTime: String
@@ -271,7 +271,9 @@ public struct NAShopCardViewV2: View {
             .addCardViewEffectV2()
         }
         .buttonStyle(CardPressButtonStyle())
-        .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         .listRowSeparator(.hidden)
     }
 }

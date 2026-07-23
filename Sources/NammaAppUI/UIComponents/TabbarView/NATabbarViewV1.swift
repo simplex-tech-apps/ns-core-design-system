@@ -24,45 +24,71 @@ struct NATabbarViewV1: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(categories) { category in
-                        VStack(spacing: 0) {
-                            Image(category.imageName, bundle: .module)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 45, height: 45)
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(categories) { category in
+                            let isSelected = category.title == selectedCategory
                             
-                            Text(category.title)
-                                .font(.system(size: 10, weight: category.title == selectedCategory ? .bold : .medium))
-                                .foregroundColor(category.title == selectedCategory ? .black : .secondary)
-                                .multilineTextAlignment(.center)
-                                .frame(height: 32, alignment: .top)
-                            
-                            ZStack {
-                                if category.title == selectedCategory {
-                                    UnevenRoundedRectangle(topLeadingRadius: 32, bottomLeadingRadius: 0, bottomTrailingRadius: 0, topTrailingRadius: 32, style: .continuous)
+                            VStack(spacing: 0) {
+                                Image(category.imageName, bundle: .module)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 36, height: 36)
+                                
+                                Text(category.title)
+                                    .font(
+                                        .system(
+                                            size: 10,
+                                            weight: isSelected ? .bold : .medium
+                                        )
+                                    )
+                                    .foregroundColor(
+                                        isSelected ? .black : .secondary
+                                    )
+                                    .multilineTextAlignment(.center)
+                                    .frame(height: 32, alignment: .top)
+                                    .animation(nil, value: selectedCategory)
+                                
+                                ZStack {
+                                    if isSelected {
+                                        UnevenRoundedRectangle(
+                                            topLeadingRadius: 32,
+                                            bottomLeadingRadius: 0,
+                                            bottomTrailingRadius: 0,
+                                            topTrailingRadius: 32,
+                                            style: .continuous
+                                        )
                                         .fill(Color.black)
-                                        .frame(height: 3)
-                                        .matchedGeometryEffect(id: "activeTabLine", in: categoryBarNamespace)
-                                } else {
-                                    Rectangle()
-                                        .fill(Color.clear)
-                                        .frame(height: 2)
+                                        .frame(height: 4)
+                                        .matchedGeometryEffect(
+                                            id: "activeTabLine",
+                                            in: categoryBarNamespace
+                                        )
+                                    } else {
+                                        Rectangle()
+                                            .fill(Color.clear)
+                                            .frame(height: 4)
+                                    }
+                                }
+                            }
+                            .frame(width: 80)
+                            .contentShape(Rectangle())
+                            .id(category.title)
+                            .onTapGesture {
+                                withAnimation(
+                                    .spring(response: 0.35, dampingFraction: 0.75)
+                                ) {
+                                    selectedCategory = category.title
+                                    proxy.scrollTo(category.title, anchor: .center)
                                 }
                             }
                         }
-                        .frame(width: 80)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                                selectedCategory = category.title
-                            }
-                        }
                     }
+                    .padding(.horizontal, 16)
                 }
-                .padding(.horizontal, 16)
             }
+            
             Rectangle()
                 .fill(Color.black.opacity(0.08))
                 .frame(height: 1)

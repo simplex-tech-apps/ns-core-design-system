@@ -69,7 +69,9 @@ public struct NAVerticalGrid_NxN_V2: View {
                     NAVerticalGrid_NxN_V2CardView(category: category)
                 }
             }
+            .padding(.horizontal, 12)
         }
+        .listRowInsets(EdgeInsets())
         .listRowSeparator(.hidden)
         .background(Color(.systemBackground))
     }

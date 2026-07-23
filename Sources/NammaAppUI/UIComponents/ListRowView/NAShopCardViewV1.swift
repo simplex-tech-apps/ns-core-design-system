@@ -102,7 +102,9 @@ public struct NAShopCardViewV1: View {
             .addCardViewEffectV2()
         }
         .buttonStyle(CardPressButtonStyle())
-        .listRowInsets(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
         .listRowSeparator(.hidden)
     }
 }

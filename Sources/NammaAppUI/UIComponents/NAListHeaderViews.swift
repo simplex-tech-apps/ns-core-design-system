@@ -63,8 +63,8 @@ struct StandardHeaderView: View {
         .listRowInsets(EdgeInsets())
         .listRowSeparator(.hidden)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
     }
 }
 
@@ -100,6 +100,7 @@ struct HighlightedHeaderView: View {
             }
             .padding(.horizontal, 12)
         }
+        .padding(.vertical, 8)
     }
 }
 
@@ -126,8 +127,8 @@ struct SeeAllHeaderView: View {
                 .foregroundColor(Color(red: 226/255, green: 18/255, blue: 73/255))
             }
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 8)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 12)
     }
 }
 

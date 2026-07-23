@@ -37,12 +37,15 @@ public struct NAVerticalGrid_NxN_V1: View {
     
     public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            LazyVGrid(columns: columns, spacing: 16) {
+            LazyVGrid(columns: columns, spacing: 12) {
                 ForEach(categories) { category in
                     NAVerticalGrid_NxN_V1CardView(category: category)
                 }
             }
+            .padding(.horizontal, 12)
         }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
         .background(Color.white)
     }
 }
