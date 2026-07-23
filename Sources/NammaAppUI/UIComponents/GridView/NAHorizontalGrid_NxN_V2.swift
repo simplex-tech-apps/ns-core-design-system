@@ -31,7 +31,7 @@ struct DottedLineShape: Shape {
     }
 }
 
-struct NAHorizontalGrid_NxN_V2: View {
+public struct NAHorizontalGrid_NxN_V2: View {
     @State private var products = [
         NAHorizontalGrid_NxN_V2Model(
             imageName: "ginger",
@@ -135,8 +135,10 @@ struct NAHorizontalGrid_NxN_V2: View {
         GridItem(.fixed(210), spacing: 24),
         GridItem(.fixed(210), spacing: 24)
     ]
+    
+    public init() {}
         
-    var body: some View {
+    public var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHGrid(rows: gridRows, alignment: .top, spacing: 14) {
                 ForEach($products) { $product in

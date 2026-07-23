@@ -162,7 +162,7 @@ struct FoodTabPreview: View {
     var body: some View {
         List {
             ForEach(sampleShops) { shop in
-                NAShopCardViewV2(shop: shop) {
+                NAShopCardViewV2() {
                     
                 }
             }

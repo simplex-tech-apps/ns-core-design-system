@@ -20,7 +20,7 @@ struct NAShopCardViewV1Model: Equatable, Identifiable, Hashable {
 }
 
 // MARK: - Shops Card View
-struct NAShopCardViewV1: View {
+public struct NAShopCardViewV1: View {
     let onTap: () -> Void
     
     let shop: NAShopCardViewV1Model = NAShopCardViewV1Model(
@@ -33,10 +33,15 @@ struct NAShopCardViewV1: View {
         imageURLs: ["https://lh3.googleusercontent.com/d/1xJ3DkfHzN2DPLGiIkq9uXz2Fcn9TxgxM", "https://lh3.googleusercontent.com/d/1xJ3DkfHzN2DPLGiIkq9uXz2Fcn9TxgxM"]
     )
     
+    public init(onTap: @escaping () -> Void, appTheme: AppThemeManager = AppThemeManager.shared) {
+        self.onTap = onTap
+        self.appTheme = appTheme
+    }
+    
     @State
     private var appTheme = AppThemeManager.shared
 
-    var body: some View {
+    public var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 6) {
                 GeometryReader { geometry in

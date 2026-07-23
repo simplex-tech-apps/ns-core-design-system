@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - Main Master View
-struct NASpotlightInRowViewV1: View {
+public struct NASpotlightInRowViewV1: View {
     
     private var topBannerGradient: LinearGradient {
         LinearGradient(
@@ -18,7 +18,9 @@ struct NASpotlightInRowViewV1: View {
         )
     }
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         VStack(spacing: 12) {
             VStack(spacing: 0) {
                 HStack(alignment: .center) {
@@ -129,7 +131,5 @@ struct SeeAllPressButtonStyle: ButtonStyle {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    SeeAllButtonViewV2() {
-        
-    }
+    NASpotlightInRowViewV1()
 }

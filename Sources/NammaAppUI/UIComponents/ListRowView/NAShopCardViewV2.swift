@@ -30,15 +30,35 @@ struct NAShopCardViewV2Model: Equatable, Identifiable, Hashable {
 }
 
 // MARK: - Shops Card View
-struct NAShopCardViewV2: View {
-    let shop: NAShopCardViewV2Model
+public struct NAShopCardViewV2: View {
+    let shop = NAShopCardViewV2Model(
+        imageName: "paneer_thali",
+        discountText: "70% off upto ₹130",
+        deliveryTime: "25-30 MINS",
+        isBolt: true,
+        boltSubtitle: "Food in 10-15 min",
+        tagBadgeText: "Pure Veg",
+        isVeg: true,
+        shopName: "ITC Aashirvaad Soul Creations",
+        rating: 4.3,
+        ratingCountText: "3.3K+",
+        location: "Ramapuram",
+        distance: "1.3 km",
+        cuisines: "Indian, pure veg",
+        costForTwo: "₹500 for two",
+        isAd: true
+    )
     let onTap: () -> Void
         
     private let ratingGreen = Color(red: 16/255, green: 130/255, blue: 60/255)
     private let boltOrange = Color(red: 245/255, green: 100/255, blue: 20/255)
     private let vegGreen = Color(red: 0/255, green: 140/255, blue: 70/255)
-        
-    var body: some View {
+     
+    public init(onTap: @escaping () -> Void) {
+        self.onTap = onTap
+    }
+    
+    public var body: some View {
         Button(action: onTap) {
             VStack(alignment: .leading, spacing: 0) {
                 ZStack(alignment: .bottom) {
@@ -258,25 +278,7 @@ struct NAShopCardViewV2: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    let shop = NAShopCardViewV2Model(
-        imageName: "paneer_thali",
-        discountText: "70% off upto ₹130",
-        deliveryTime: "25-30 MINS",
-        isBolt: true,
-        boltSubtitle: "Food in 10-15 min",
-        tagBadgeText: "Pure Veg",
-        isVeg: true,
-        shopName: "ITC Aashirvaad Soul Creations",
-        rating: 4.3,
-        ratingCountText: "3.3K+",
-        location: "Ramapuram",
-        distance: "1.3 km",
-        cuisines: "Indian, pure veg",
-        costForTwo: "₹500 for two",
-        isAd: true
-    )
-    
-    NAShopCardViewV2(shop: shop) {
+    NAShopCardViewV2() {
         
     }
 }

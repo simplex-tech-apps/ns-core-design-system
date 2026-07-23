@@ -26,7 +26,7 @@ struct DealCardItem: Identifiable, Hashable {
 }
 
 // MARK: - Main Grid Layout Canvas View
-struct NAStaggeredGridViewV1: View {
+public struct NAStaggeredGridViewV1: View {
     let gridDeals = [
         DealCardItem(
             title: "Chicken",
@@ -76,7 +76,9 @@ struct NAStaggeredGridViewV1: View {
         cardType: .topDeals
     )
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         GeometryReader { geometry in
             let equalCardWidth = (geometry.size.width - 32) / 3
             let gridSpacing: CGFloat = 8
@@ -235,7 +237,7 @@ struct DynamicDealCardView: View {
                             .font(.system(size: 10, weight: .bold))
                             .foregroundColor(.white)
                             .padding(.horizontal, 6)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity) // 🎯 Fills left half evenly
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .background(darkGreyBadge)
                         
                         if let discount = item.discountText {
@@ -243,11 +245,11 @@ struct DynamicDealCardView: View {
                                 .font(.system(size: 10, weight: .bold))
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 6)
-                                .frame(maxWidth: .infinity, maxHeight: .infinity) // 🎯 Fills right half evenly
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .background(badgePink)
                         }
                     }
-                    .frame(maxWidth: .infinity) // 🎯 Expands the banner across the full card width
+                    .frame(maxWidth: .infinity)
                     .frame(height: 24)
                     .clipShape(UnevenRoundedRectangle(
                         topLeadingRadius: 24,

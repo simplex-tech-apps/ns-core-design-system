@@ -16,7 +16,7 @@ struct NAVerticalGrid_NxN_V1Model: Identifiable, Hashable {
 }
 
 // MARK: - Main Grid View
-struct NAVerticalGrid_NxN_V1: View {
+public struct NAVerticalGrid_NxN_V1: View {
     static let mintGreen = Color(red: 218/255, green: 247/255, blue: 194/255)
     
     let categories: [NAVerticalGrid_NxN_V1Model] = [
@@ -33,7 +33,9 @@ struct NAVerticalGrid_NxN_V1: View {
 
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 4)
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(categories) { category in

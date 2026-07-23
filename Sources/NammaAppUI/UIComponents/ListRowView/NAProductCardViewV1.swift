@@ -7,11 +7,26 @@
 
 import SwiftUI
 
+// MARK: - Product Model
+struct NAProductCardViewV1Model: Identifiable {
+    let id = UUID()
+    let title: String
+    let weightInfo: String
+    let flavourTag: String
+    let currentPrice: Int
+    let originalPrice: Int
+    let discountText: String
+    let rating: Double
+    let ratingCountText: String
+    let productImage: String
+    var isFavorite: Bool = false
+}
+
 // MARK: - Individual Product Card View
-struct NAProductCardViewV1: View {
-    @Binding var product: ProductItem
+public struct NAProductCardViewV1: View {
+    @Binding var product: NAProductCardViewV1Model
     
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
                 Image("vegetables", bundle: .module)
@@ -113,7 +128,7 @@ struct NAProductCardViewV1: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    @Previewable @State var product = ProductItem(title: "Lay's American Cream & Onion Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Cream & Onion", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.7, ratingCountText: "(52k)", productImage: "lays_green")
+    @Previewable @State var product = NAProductCardViewV1Model(title: "Lay's American Cream & Onion Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Cream & Onion", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.7, ratingCountText: "(52k)", productImage: "lays_green")
     NAProductCardViewV1(product: $product)
         .frame(width: 165)
 }

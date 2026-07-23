@@ -7,33 +7,20 @@
 
 import SwiftUI
 
-// MARK: - Product Model
-struct ProductItem: Identifiable {
-    let id = UUID()
-    let title: String
-    let weightInfo: String
-    let flavourTag: String
-    let currentPrice: Int
-    let originalPrice: Int
-    let discountText: String
-    let rating: Double
-    let ratingCountText: String
-    let productImage: String
-    var isFavorite: Bool = false
-}
-
 // MARK: - Main Catalog View
-struct NASpotlightInRowViewV2: View {
+public struct NASpotlightInRowViewV2: View {
     @State private var products = [
-        ProductItem(title: "Lay's American Cream & Onion Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Cream & Onion", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.7, ratingCountText: "(52k)", productImage: "lays_green"),
-        ProductItem(title: "Lay's India's Magic Masala | Crunchy Potato Chips", weightInfo: "1 pack (82 g or 80 g)", flavourTag: "Magic Masala", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.9, ratingCountText: "(65k)", productImage: "lays_blue"),
-        ProductItem(title: "Lay's Spanish Tomato Tango Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Tomato", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.8, ratingCountText: "(18k)", productImage: "lays_red"),
-        ProductItem(title: "Lay's American Cream & Onion Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Cream & Onion", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.7, ratingCountText: "(52k)", productImage: "lays_green"),
-        ProductItem(title: "Lay's India's Magic Masala | Crunchy Potato Chips", weightInfo: "1 pack (82 g or 80 g)", flavourTag: "Magic Masala", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.9, ratingCountText: "(65k)", productImage: "lays_blue"),
-        ProductItem(title: "Lay's Spanish Tomato Tango Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Tomato", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.8, ratingCountText: "(18k)", productImage: "lays_red")
+        NAProductCardViewV1Model(title: "Lay's American Cream & Onion Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Cream & Onion", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.7, ratingCountText: "(52k)", productImage: "lays_green"),
+        NAProductCardViewV1Model(title: "Lay's India's Magic Masala | Crunchy Potato Chips", weightInfo: "1 pack (82 g or 80 g)", flavourTag: "Magic Masala", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.9, ratingCountText: "(65k)", productImage: "lays_blue"),
+        NAProductCardViewV1Model(title: "Lay's Spanish Tomato Tango Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Tomato", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.8, ratingCountText: "(18k)", productImage: "lays_red"),
+        NAProductCardViewV1Model(title: "Lay's American Cream & Onion Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Cream & Onion", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.7, ratingCountText: "(52k)", productImage: "lays_green"),
+        NAProductCardViewV1Model(title: "Lay's India's Magic Masala | Crunchy Potato Chips", weightInfo: "1 pack (82 g or 80 g)", flavourTag: "Magic Masala", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.9, ratingCountText: "(65k)", productImage: "lays_blue"),
+        NAProductCardViewV1Model(title: "Lay's Spanish Tomato Tango Flavour | Potato Chips", weightInfo: "1 pack (80 g)", flavourTag: "Tomato", currentPrice: 38, originalPrice: 48, discountText: "₹10 OFF", rating: 4.8, ratingCountText: "(18k)", productImage: "lays_red")
     ]
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         VStack(spacing: 16) {
             HStack(alignment: .top) {
                 Image("vegetables", bundle: .module)

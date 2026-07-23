@@ -26,7 +26,7 @@ struct NAHorizontalGrid_NxN_V1Model: Identifiable {
 }
 
 // MARK: - Main Grid View
-struct NAHorizontalGrid_NxN_V1: View {    
+public struct NAHorizontalGrid_NxN_V1: View {
     @State private var products = [
         NAHorizontalGrid_NxN_V1Model(
             title: "Blue Heaven Intense Matte Lipstick | Plum D...",
@@ -132,7 +132,9 @@ struct NAHorizontalGrid_NxN_V1: View {
         GridItem(.fixed(310), spacing: 16)
     ]
     
-    var body: some View {
+   public init() {}
+    
+   public var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHGrid(rows: gridRows, alignment: .top, spacing: 14) {
                 ForEach($products) { $product in
