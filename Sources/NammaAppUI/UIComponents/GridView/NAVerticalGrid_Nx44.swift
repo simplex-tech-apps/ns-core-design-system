@@ -474,13 +474,6 @@ struct AilmentCardView: View {
     }
 }
 
-// MARK: - Models
-struct BeautyCategory: Identifiable, Hashable {
-    let id = UUID()
-    let title: String
-    let imageName: String
-}
-
 struct BeautyProductItem: Identifiable {
     let id = UUID()
     let title: String
@@ -502,11 +495,11 @@ struct BeautyProductItem: Identifiable {
 struct BeautyCatalogView: View {
     // Top Categories List
     let categories = [
-        BeautyCategory(title: "Lipstick", imageName: "lipstick_icon"),
-        BeautyCategory(title: "Kajal and\nliner", imageName: "kajal_icon"),
-        BeautyCategory(title: "Foundation", imageName: "foundation_icon"),
-        BeautyCategory(title: "Nails", imageName: "nails_icon"),
-        BeautyCategory(title: "Compact\npowder", imageName: "compact_icon")
+        TabbarCategoryModel(title: "Lipstick", imageName: "lipstick_icon"),
+        TabbarCategoryModel(title: "Kajal and\nliner", imageName: "kajal_icon"),
+        TabbarCategoryModel(title: "Foundation", imageName: "foundation_icon"),
+        TabbarCategoryModel(title: "Nails", imageName: "nails_icon"),
+        TabbarCategoryModel(title: "Compact\npowder", imageName: "compact_icon")
     ]
     
     @State private var selectedCategory: String = "Lipstick"

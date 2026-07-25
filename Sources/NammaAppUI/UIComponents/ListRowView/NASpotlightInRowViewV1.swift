@@ -10,6 +10,16 @@ import SwiftUI
 // MARK: - Main Master View
 public struct NASpotlightInRowViewV1: View {
     
+    private var categories = [
+        TabbarCategoryModel(title: "All", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Curry Cuts", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Boneless &\nMince", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Speciality\nCuts", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Offals", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Combos", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Premium\nCuts", imageName: "chicken_product")
+    ]
+    
     private var topBannerGradient: LinearGradient {
         LinearGradient(
             colors: [Color(red: 255/255, green: 242/255, blue: 236/255), Color(red: 254/255, green: 245/255, blue: 242/255)],
@@ -41,7 +51,7 @@ public struct NASpotlightInRowViewV1: View {
                         .frame(width: 130, height: 95)
                 }
                 .padding(.horizontal, 16)
-                NATabbarViewV1()
+                NATabbarViewV1(categories: categories)
                 .padding(.bottom)
                 NACarouselView()
                 SeeAllButtonViewV1 {

@@ -7,22 +7,27 @@
 
 import SwiftUI
 
-struct NATabbarViewV1: View {
+// MARK: - Models
+public struct TabbarCategoryModel: Identifiable, Hashable {
+    public let id = UUID()
+    let title: String
+    let imageName: String
+}
+
+public struct NATabbarViewV1: View {
 
     @State private var selectedCategory: String = "All"
     @Namespace private var categoryBarNamespace
     
-    private let categories = [
-        BeautyCategory(title: "All", imageName: "chicken_product"),
-        BeautyCategory(title: "Curry Cuts", imageName: "chicken_product"),
-        BeautyCategory(title: "Boneless &\nMince", imageName: "chicken_product"),
-        BeautyCategory(title: "Speciality\nCuts", imageName: "chicken_product"),
-        BeautyCategory(title: "Offals", imageName: "chicken_product"),
-        BeautyCategory(title: "Combos", imageName: "chicken_product"),
-        BeautyCategory(title: "Premium\nCuts", imageName: "chicken_product")
-    ]
+    var categories: [TabbarCategoryModel] = []
     
-    var body: some View {
+   public init(categories: [TabbarCategoryModel]) {
+        self.categories = categories
+        let defaultCategory = categories.first?.title ?? "All"
+        self._selectedCategory = State(initialValue: defaultCategory)
+    }
+    
+    public var body: some View {
         ZStack(alignment: .bottom) {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -98,5 +103,14 @@ struct NATabbarViewV1: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    NATabbarViewV1()
+    var categories = [
+        TabbarCategoryModel(title: "All", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Curry Cuts", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Boneless &\nMince", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Speciality\nCuts", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Offals", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Combos", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Premium\nCuts", imageName: "chicken_product")
+    ]
+    NATabbarViewV1(categories: categories)
 }
