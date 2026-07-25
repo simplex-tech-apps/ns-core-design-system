@@ -9,6 +9,11 @@ import SwiftUI
 
 // MARK: - Models
 public struct TabbarCategoryModel: Identifiable, Hashable {
+    public init(title: String, imageName: String) {
+        self.title = title
+        self.imageName = imageName
+    }
+    
     public let id = UUID()
     let title: String
     let imageName: String
