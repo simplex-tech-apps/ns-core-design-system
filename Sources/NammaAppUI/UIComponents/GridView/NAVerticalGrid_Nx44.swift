@@ -2002,7 +2002,7 @@ struct ConcernHorizontalCardView: View {
         HStack(spacing: 0) {
             
             // LEFT BLOCK: The Image Asset (Masked with explicit left rounded corners)
-            Image(concern.imageName)
+            Image("chicken_product", bundle: .module)
                 .resizable()
                 .scaledToFill()
                 .frame(width: 120, height: 120)
@@ -2076,7 +2076,7 @@ struct ConcernHorizontalCardView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    GreenSanctuaryView()
+    ConcernsHorizontalGridView()
 }
 
 

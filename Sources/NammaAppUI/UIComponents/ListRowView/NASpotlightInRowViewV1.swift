@@ -42,6 +42,7 @@ public struct NASpotlightInRowViewV1: View {
                 }
                 .padding(.horizontal, 16)
                 NATabbarViewV1()
+                .padding(.bottom)
                 NACarouselView()
                 SeeAllButtonViewV1 {
                     print("See All tapped!")
