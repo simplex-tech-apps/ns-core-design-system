@@ -12,12 +12,11 @@ public struct NASpotlightInRowViewV1: View {
     
     private var categories = [
         TabbarCategoryModel(title: "All", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Curry Cuts", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Boneless &\nMince", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Speciality\nCuts", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Offals", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Combos", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Premium\nCuts", imageName: "chicken_product")
+        TabbarCategoryModel(title: "Grocery", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Vegetables", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Fruits", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Meat", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Fish", imageName: "chicken_product"),
     ]
     
     private var topBannerGradient: LinearGradient {

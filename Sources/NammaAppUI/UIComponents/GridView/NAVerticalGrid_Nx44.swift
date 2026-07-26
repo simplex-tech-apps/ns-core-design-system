@@ -1437,17 +1437,11 @@ struct PlantProductItem: Identifiable {
 struct GreenSanctuaryView: View {
     // Top Horizontal Categories
     let categories = [
-        PlantCategory(title: "Top Picks", iconName: "fork.knife"),
-        PlantCategory(title: "Plants", iconName: "leaf.fill"),
-        PlantCategory(
-            title: "Cocopeat\n& Vermicompost",
-            iconName: "shippingbox.fill"
-        ),
-        PlantCategory(title: "Planting\nSeeds", iconName: "sprout.fill"),
-        PlantCategory(
-            title: "Gardening\nTools",
-            iconName: "wrench.and.screwdriver.fill"
-        )
+        PlantCategory(title: "Namma\nShop", iconName: "fork.knife"),
+        PlantCategory(title: "Fresh", iconName: "leaf.fill"),
+        PlantCategory(title: "Meat",iconName: "shippingbox.fill"),
+        PlantCategory(title: "Fish", iconName: "sprout.fill"),
+        PlantCategory(title: "Food",iconName: "wrench.and.screwdriver.fill")
     ]
     
     @State private var selectedCategory: String = "Cocopeat\n& Vermicompost"
@@ -2069,7 +2063,7 @@ struct ConcernHorizontalCardView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    ConcernsHorizontalGridView()
+    GreenSanctuaryView()
 }
 
 

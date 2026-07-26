@@ -44,7 +44,7 @@ public struct NATabbarViewV1: View {
                                 Image(category.imageName, bundle: .module)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 36, height: 36)
+                                    .frame(width: 30, height: 30)
                                 
                                 Text(category.title)
                                     .font(
@@ -57,7 +57,7 @@ public struct NATabbarViewV1: View {
                                         isSelected ? .black : .secondary
                                     )
                                     .multilineTextAlignment(.center)
-                                    .frame(height: 32, alignment: .top)
+                                    .padding(.bottom, 8)
                                     .animation(nil, value: selectedCategory)
                                 
                                 ZStack {
@@ -110,12 +110,11 @@ public struct NATabbarViewV1: View {
 #Preview {
     var categories = [
         TabbarCategoryModel(title: "All", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Curry Cuts", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Boneless &\nMince", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Speciality\nCuts", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Offals", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Combos", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Premium\nCuts", imageName: "chicken_product")
+        TabbarCategoryModel(title: "Grocery", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Vegetables", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Fruits", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Meat", imageName: "chicken_product"),
+        TabbarCategoryModel(title: "Fish", imageName: "chicken_product"),
     ]
     NATabbarViewV1(categories: categories)
 }
