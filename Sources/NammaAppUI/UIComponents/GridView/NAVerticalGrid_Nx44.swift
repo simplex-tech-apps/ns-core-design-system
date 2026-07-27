@@ -502,7 +502,7 @@ struct BeautyCatalogView: View {
         TabbarCategoryModel(title: "Compact\npowder", imageName: "compact_icon")
     ]
     
-    @State private var selectedCategory: String = "Lipstick"
+    @State private var activeCategory: String = "Lipstick"
     
     // Product Items State Management
     @State private var products = [
@@ -622,18 +622,18 @@ struct BeautyCatalogView: View {
                                     .font(
                                         .system(
                                             size: 13,
-                                            weight: category.title == selectedCategory ? .bold : .medium
+                                            weight: category.title == activeCategory ? .bold : .medium
                                         )
                                     )
                                     .foregroundColor(
-                                        category.title == selectedCategory ? .black : .secondary
+                                        category.title == activeCategory ? .black : .secondary
                                     )
                                     .multilineTextAlignment(.center)
                                     .frame(height: 32, alignment: .top)
                                 
                                 // Animated Indicator Strip Base
                                 ZStack {
-                                    if category.title == selectedCategory {
+                                    if category.title == activeCategory {
                                         Rectangle()
                                             .fill(Color.black)
                                             .frame(height: 2)
@@ -662,7 +662,7 @@ struct BeautyCatalogView: View {
                                         dampingFraction: 0.75
                                     )
                                 ) {
-                                    selectedCategory = category.title
+                                    activeCategory = category.title
                                 }
                             }
                         }
@@ -1444,7 +1444,7 @@ struct GreenSanctuaryView: View {
         PlantCategory(title: "Food",iconName: "wrench.and.screwdriver.fill")
     ]
     
-    @State private var selectedCategory: String = "Cocopeat\n& Vermicompost"
+    @State private var activeCategory: String = "Cocopeat\n& Vermicompost"
     @Namespace private var categoryBarNamespace
     
     // Product Items State Matrix matching the dynamic video views
@@ -1582,7 +1582,7 @@ struct GreenSanctuaryView: View {
                                     .font(
                                         .system(
                                             size: 12,
-                                            weight: selectedCategory == category.title ? .bold : .medium
+                                            weight: activeCategory == category.title ? .bold : .medium
                                         )
                                     )
                                     .foregroundColor(.primary)
@@ -1594,7 +1594,7 @@ struct GreenSanctuaryView: View {
                             .padding(.vertical, 8)
                             .background(
                                 ZStack {
-                                    if selectedCategory == category.title {
+                                    if activeCategory == category.title {
                                         RoundedRectangle(cornerRadius: 16)
                                             .stroke(
                                                 Color(
@@ -1624,7 +1624,7 @@ struct GreenSanctuaryView: View {
                                         dampingFraction: 0.75
                                     )
                                 ) {
-                                    selectedCategory = category.title
+                                    activeCategory = category.title
                                 }
                             }
                         }

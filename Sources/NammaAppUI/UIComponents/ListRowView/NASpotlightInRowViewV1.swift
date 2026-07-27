@@ -50,7 +50,7 @@ public struct NASpotlightInRowViewV1: View {
                         .frame(width: 130, height: 95)
                 }
                 .padding(.horizontal, 16)
-                NATabbarViewV1(categories: categories)
+                //NATabbarViewV1(categories: categories)
                 .padding(.bottom)
                 NACarouselView()
                 SeeAllButtonViewV1 {

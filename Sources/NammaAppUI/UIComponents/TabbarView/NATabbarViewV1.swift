@@ -19,17 +19,46 @@ public struct TabbarCategoryModel: Identifiable, Hashable {
     let imageName: String
 }
 
+public enum NammaShopCategoryTabRoute: String, CaseIterable, Identifiable {
+    case all
+    case grocery
+    case vegetables
+    case fruits
+    case meat
+    case fish
+    
+    public var id: String { self.rawValue }
+    
+    public var title: String {
+        switch self {
+        case .all: return "All"
+        case .grocery: return "Grocery"
+        case .vegetables: return "Vegetables"
+        case .fruits: return "Fruits"
+        case .meat: return "Meat"
+        case .fish: return "Fish"
+        }
+    }
+    
+    public var iconName: String {
+        switch self {
+        case .all: return "square.grid.2x2.fill"
+        case .grocery: return "basket.fill"
+        case .vegetables: return "carrot.fill"
+        case .fruits: return "leaf.fill"
+        case .meat: return "fork.knife"
+        case .fish: return "fish.fill"
+        }
+    }
+}
+
 public struct NATabbarViewV1: View {
 
-    @State private var selectedCategory: String = "All"
+    @Binding var selectedRoute: NammaShopCategoryTabRoute
     @Namespace private var categoryBarNamespace
     
-    var categories: [TabbarCategoryModel] = []
-    
-   public init(categories: [TabbarCategoryModel]) {
-        self.categories = categories
-        let defaultCategory = categories.first?.title ?? "All"
-        self._selectedCategory = State(initialValue: defaultCategory)
+    public init(selectedRoute: Binding<NammaShopCategoryTabRoute>) {
+        self._selectedRoute = selectedRoute
     }
     
     public var body: some View {
@@ -37,28 +66,30 @@ public struct NATabbarViewV1: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
-                        ForEach(categories) { category in
-                            let isSelected = category.title == selectedCategory
+                        ForEach(NammaShopCategoryTabRoute.allCases) { route in
+                            let isSelected = route == selectedRoute
                             
-                            VStack(spacing: 0) {
-                                Image(category.imageName, bundle: .module)
+                            VStack(spacing: 6) {
+                                Image(systemName: route.iconName)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 30, height: 30)
+                                    .frame(width: 16, height: 16)
+                                    .foregroundColor(isSelected ? .black : .black.opacity(0.6))
+                                    .padding(.top, 6)
                                 
-                                Text(category.title)
+                                Text(route.title)
                                     .font(
                                         .system(
-                                            size: 10,
+                                            size: 11,
                                             weight: isSelected ? .bold : .medium
                                         )
                                     )
                                     .foregroundColor(
-                                        isSelected ? .black : .secondary
+                                        isSelected ? .black : .black.opacity(0.6)
                                     )
                                     .multilineTextAlignment(.center)
-                                    .padding(.bottom, 8)
-                                    .animation(nil, value: selectedCategory)
+                                    .padding(.bottom, 4)
+                                    .animation(.none, value: selectedRoute)
                                 
                                 ZStack {
                                     if isSelected {
@@ -82,15 +113,15 @@ public struct NATabbarViewV1: View {
                                     }
                                 }
                             }
-                            .frame(width: 80)
+                            .frame(width: 76)
                             .contentShape(Rectangle())
-                            .id(category.title)
+                            .id(route)
                             .onTapGesture {
                                 withAnimation(
                                     .spring(response: 0.35, dampingFraction: 0.75)
                                 ) {
-                                    selectedCategory = category.title
-                                    proxy.scrollTo(category.title, anchor: .center)
+                                    selectedRoute = route
+                                    proxy.scrollTo(route, anchor: .center)
                                 }
                             }
                         }
@@ -100,7 +131,7 @@ public struct NATabbarViewV1: View {
             }
             
             Rectangle()
-                .fill(Color.black.opacity(0.08))
+                .fill(Color.white.opacity(0.12))
                 .frame(height: 1)
         }
     }
@@ -108,13 +139,15 @@ public struct NATabbarViewV1: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    var categories = [
-        TabbarCategoryModel(title: "All", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Grocery", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Vegetables", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Fruits", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Meat", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Fish", imageName: "chicken_product"),
-    ]
-    NATabbarViewV1(categories: categories)
+    struct PreviewWrapper: View {
+        @State private var route: NammaShopCategoryTabRoute = .all
+        
+        var body: some View {
+            VStack {
+                NATabbarViewV1(selectedRoute: $route)
+            }
+        }
+    }
+    
+    return PreviewWrapper()
 }
