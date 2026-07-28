@@ -30,6 +30,8 @@ public struct NAVerticalGrid_NxN_V3: View {
         count: 2
     )
     
+    public init() {}
+    
     public var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
             LazyVGrid(columns: columns, spacing: 12) {
