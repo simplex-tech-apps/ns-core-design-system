@@ -75,6 +75,8 @@ public struct NACarouselViewV2: View {
         GridItem(.fixed(180), spacing: 24)
     ]
     
+    public init() {}
+    
     public var body: some View {
         GeometryReader { outerGeometry in
             let screenWidth = outerGeometry.size.width
