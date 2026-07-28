@@ -328,7 +328,7 @@ struct NAHorizontalGrid_NxN_V1_CardView: View {
                         .foregroundColor(.blue)
                         .padding(.top, 2)
                         .overlay(
-                            LineStylePattern()
+                                LineStylePattern()
                                 .stroke(
                                     style: StrokeStyle(
                                         lineWidth: 1,

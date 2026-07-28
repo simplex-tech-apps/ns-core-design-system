@@ -126,8 +126,8 @@ struct NAVerticalGrid_NxN_V2CardView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .strokeBorder(
                     Color.gray.opacity(0.2),
-                    lineWidth: 1.5
-                ) 
+                    lineWidth: 0.75
+                )
         )
     }
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - Models
-public struct TabbarCategoryModel: Identifiable, Hashable {
+public struct TabbarCategoryV1Model: Identifiable, Hashable {
     public init(title: String, imageName: String) {
         self.title = title
         self.imageName = imageName
@@ -22,8 +22,7 @@ public struct TabbarCategoryModel: Identifiable, Hashable {
 public enum NammaShopCategoryTabRoute: String, CaseIterable, Identifiable {
     case all
     case grocery
-    case vegetables
-    case fruits
+    case fresh
     case meat
     case fish
     
@@ -33,8 +32,7 @@ public enum NammaShopCategoryTabRoute: String, CaseIterable, Identifiable {
         switch self {
         case .all: return "All"
         case .grocery: return "Grocery"
-        case .vegetables: return "Vegetables"
-        case .fruits: return "Fruits"
+        case .fresh: return "Fresh"
         case .meat: return "Meat"
         case .fish: return "Fish"
         }
@@ -44,8 +42,7 @@ public enum NammaShopCategoryTabRoute: String, CaseIterable, Identifiable {
         switch self {
         case .all: return "square.grid.2x2.fill"
         case .grocery: return "basket.fill"
-        case .vegetables: return "carrot.fill"
-        case .fruits: return "leaf.fill"
+        case .fresh: return "leaf.fill"
         case .meat: return "fork.knife"
         case .fish: return "fish.fill"
         }

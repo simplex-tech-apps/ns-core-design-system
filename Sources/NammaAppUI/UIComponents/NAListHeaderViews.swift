@@ -77,7 +77,8 @@ struct HighlightedHeaderView: View {
             Text(title)
                 .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundColor(.black)
-            
+                .lineLimit(1)
+        
             HStack(spacing: 12) {
                 LinearGradient(
                     colors: [.clear, .black.opacity(0.15)],
@@ -85,10 +86,14 @@ struct HighlightedHeaderView: View {
                     endPoint: .trailing
                 )
                 .frame(height: 1)
+                .frame(maxWidth: .infinity)
                 
                 Text(subtitle)
                     .font(.system(size: 12, weight: .medium, design: .rounded))
                     .foregroundColor(.secondary)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
+                    .layoutPriority(1)
                     .offset(y: 1)
                 
                 LinearGradient(
@@ -97,7 +102,9 @@ struct HighlightedHeaderView: View {
                     endPoint: .trailing
                 )
                 .frame(height: 1)
+                .frame(maxWidth: .infinity)
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, 12)
         }
         .padding(.vertical, 8)

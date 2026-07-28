@@ -10,14 +10,7 @@ import SwiftUI
 // MARK: - Main Master View
 public struct NASpotlightInRowViewV1: View {
     
-    private var categories = [
-        TabbarCategoryModel(title: "All", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Grocery", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Vegetables", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Fruits", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Meat", imageName: "chicken_product"),
-        TabbarCategoryModel(title: "Fish", imageName: "chicken_product"),
-    ]
+    @State private var category: NammaShopFreshTabCategories = .vegetable
     
     private var topBannerGradient: LinearGradient {
         LinearGradient(
@@ -50,9 +43,9 @@ public struct NASpotlightInRowViewV1: View {
                         .frame(width: 130, height: 95)
                 }
                 .padding(.horizontal, 16)
-                //NATabbarViewV1(categories: categories)
+                NATabbarViewV2(selectedCategory: $category)
                 .padding(.bottom)
-                NACarouselView()
+                NACarouselViewV1()
                 SeeAllButtonViewV1 {
                     print("See All tapped!")
                 }
@@ -60,7 +53,7 @@ public struct NASpotlightInRowViewV1: View {
             }
             .background(Color(red: 253/255, green: 246/255, blue: 243/255))
         }
-        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
+        .listRowInsets(EdgeInsets())
         .listRowSeparator(.hidden)
     }
 }

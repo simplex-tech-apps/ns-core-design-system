@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - Promo Model
-struct ProductCarouselModel: Identifiable, Hashable {
+struct NACarouselV1Model: Identifiable, Hashable {
     let id = UUID()
     let title: String
     let volumeInfo: String
@@ -25,9 +25,9 @@ struct ProductCarouselModel: Identifiable, Hashable {
     let promotionText: String?
 }
 
-public struct NACarouselView: View {
+public struct NACarouselViewV1: View {
     let products = [
-        ProductCarouselModel(
+        NACarouselV1Model(
             title: "Premium Tender Chicken Curry Cut",
             volumeInfo: "500g",
             finishTag: "Freshly Cut",
@@ -43,7 +43,7 @@ public struct NACarouselView: View {
             promotionText: "Buy 1/2 kg, get 1 egg FREE!"
         ),
         
-        ProductCarouselModel(
+        NACarouselV1Model(
             title: "Lean Mutton Curry Cut (Bone-in)",
             volumeInfo: "500g",
             finishTag: "Premium Halal",
@@ -59,7 +59,7 @@ public struct NACarouselView: View {
             promotionText: "Buy 1 kg, get 2 eggs FREE!"
         ),
         
-        ProductCarouselModel(
+        NACarouselV1Model(
             title: "Country Chicken / Nattu Kozhi",
             volumeInfo: "1kg",
             finishTag: "Skin-on",
@@ -75,7 +75,7 @@ public struct NACarouselView: View {
             promotionText: "Locally Sourced"
         ),
         
-        ProductCarouselModel(
+        NACarouselV1Model(
             title: "Fresh Boneless Chicken Breast Platter",
             volumeInfo: "450g",
             finishTag: "Cleaned & Antibiotic-Free",
@@ -91,7 +91,7 @@ public struct NACarouselView: View {
             promotionText: "High Protein Pick"
         ),
         
-        ProductCarouselModel(
+        NACarouselV1Model(
             title: "Premium Goat Mutton Mince / Keema",
             volumeInfo: "250g",
             finishTag: "Finely Minced",
@@ -128,7 +128,7 @@ public struct NACarouselView: View {
                             let activeScale = max(0.90, min(1.0, rawScale))
                             let activeOpacity = max(0.6, min(1.0, 1.0 - (distanceFromCenter / screenWidth) * 0.5))
 
-                            NAProductCarouselCardView(product: item)
+                            NACarouselCardViewV1(product: item)
                                 .scaleEffect(activeScale)
                                 .animation(.interactiveSpring(response: 0.35, dampingFraction: 0.8), value: distanceFromCenter)
                         }
@@ -150,5 +150,5 @@ public struct NACarouselView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    NACarouselView()
+    NACarouselViewV1()
 }

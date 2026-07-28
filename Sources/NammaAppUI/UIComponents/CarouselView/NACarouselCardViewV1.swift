@@ -8,8 +8,8 @@
 import SwiftUI
 
 // MARK: - Individual Component Layout Card
-struct NAProductCarouselCardView: View {
-    let product: ProductCarouselModel
+struct NACarouselCardViewV1: View {
+    let product: NACarouselV1Model
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -158,7 +158,7 @@ struct NAProductCarouselCardView: View {
 
 // MARK: - Preview Setup Engine
 #Preview {
-    let product = ProductCarouselModel(
+    let product = NACarouselV1Model(
         title: "Premium Tender Chicken Curry Cut",
         volumeInfo: "500g",
         finishTag: "Freshly Cut",
@@ -173,5 +173,5 @@ struct NAProductCarouselCardView: View {
         hasOptions: false,
         promotionText: "Buy 1/2 kg, get 1 egg FREE!"
     )
-    NAProductCarouselCardView(product: product)
+    NACarouselCardViewV1(product: product)
 }

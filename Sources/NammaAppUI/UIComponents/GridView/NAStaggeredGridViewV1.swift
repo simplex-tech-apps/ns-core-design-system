@@ -103,8 +103,6 @@ public struct NAStaggeredGridViewV1: View {
                         }
                     }
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8) 
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .background(Color(red: 255/255, green: 212/255, blue: 225/255))
@@ -121,7 +119,7 @@ public struct NAStaggeredGridViewV1: View {
         let equalCardWidth = (screenWidth - horizontalPadding - totalInnerSpacing) / 3
         let gridSpacing: CGFloat = 8
         let tallCardHeight = (equalCardWidth * 2) + gridSpacing
-        return tallCardHeight + 16
+        return tallCardHeight + 36
     }
 }
 
