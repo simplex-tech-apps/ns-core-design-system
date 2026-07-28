@@ -82,8 +82,10 @@ public struct NACarouselViewV2: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: gridRows, alignment: .top, spacing: 12) {
                     ForEach(products) { item in
-                        NACarouselCardViewV2(item: item)
-                            .frame(width: screenWidth/1.25)
+                        NACarouselCardViewV2(item: item) {
+                            
+                        }
+                        .frame(width: screenWidth/1.25)
                     }
                 }
                 .padding(.horizontal, 12)

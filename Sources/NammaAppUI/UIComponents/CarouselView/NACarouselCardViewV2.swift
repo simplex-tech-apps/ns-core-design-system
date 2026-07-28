@@ -8,11 +8,16 @@
 import SwiftUI
 
 // MARK: - Individual Card Component
-struct NACarouselCardViewV2: View {
+public struct NACarouselCardViewV2: View {
     let item: NACarouselV2Model
     var onTap: (() -> Void)? = nil
     
-    var body: some View {
+    public init(item: NACarouselV2Model, onTap: @escaping (() -> Void)) {
+        self.item = item
+        self.onTap = onTap
+    }
+    
+    public var body: some View {
         ZStack(alignment: .leading) {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(item.backgroundColor)
