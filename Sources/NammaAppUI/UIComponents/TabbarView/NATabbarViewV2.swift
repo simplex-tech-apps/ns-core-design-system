@@ -70,7 +70,7 @@ public struct NATabbarViewV2: View {
         ZStack(alignment: .bottom) {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(alignment: .top, spacing: 8) {
+                    HStack(alignment: .top, spacing: 0) {
                         ForEach(NammaShopFreshTabCategories.allCases) { category in
                             let isSelected = category == selectedCategory
                             
