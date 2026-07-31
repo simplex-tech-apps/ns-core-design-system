@@ -22,7 +22,7 @@ struct NAHorizontalGrid_NxN_V1Model: Identifiable {
     var isFavorite: Bool = false
     var quantity: Int = 0
     let hasOptions: Bool
-    let promotionText: String? 
+    let promotionText: String?
 }
 
 // MARK: - Main Grid View
@@ -353,5 +353,4 @@ struct NAHorizontalGrid_NxN_V1_CardView: View {
 #Preview {
     NAHorizontalGrid_NxN_V1()
 }
-
 

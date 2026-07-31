@@ -23,6 +23,9 @@ struct NammaShopAllTabPreview: View {
             NAHorizontalGrid_NxN_V3()
                 .padding(.top, 8)
             ReusableHeaderView(style: .standard(title: "Fresh items"))
+            ReusableHeaderView(style: .action(title: "RecentSearches", actionTitle: "clear", onAction: {
+                
+            }))
             NAHorizontalGrid_NxN_V4(columnCount: 4, rowCount: 1)
             ReusableHeaderView(style: .standard(title: "Grocery & Kitchen"))
             NAHorizontalGrid_NxN_V4(columnCount: 4, rowCount: 1)

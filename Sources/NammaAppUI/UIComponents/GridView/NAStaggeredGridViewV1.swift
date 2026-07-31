@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - Models
-struct DealCardItem: Identifiable, Hashable {
+struct NAStaggeredGridViewV1Model: Identifiable, Hashable {
     let id = UUID()
     let title: String
     let subtitle: String?
@@ -28,7 +28,7 @@ struct DealCardItem: Identifiable, Hashable {
 // MARK: - Main Grid Layout Canvas View
 public struct NAStaggeredGridViewV1: View {
     let gridDeals = [
-        DealCardItem(
+        NAStaggeredGridViewV1Model(
             title: "Chicken",
             subtitle: nil,
             discountText: "6% OFF",
@@ -37,7 +37,7 @@ public struct NAStaggeredGridViewV1: View {
             productImages: ["chicken_product", "chicken_product", "chicken_product"],
             cardType: .standardOffer
         ),
-        DealCardItem(
+        NAStaggeredGridViewV1Model(
             title: "Mutton",
             subtitle: nil,
             discountText: "10% OFF",
@@ -46,7 +46,7 @@ public struct NAStaggeredGridViewV1: View {
             productImages: ["chicken_product", "chicken_product", "chicken_product"],
             cardType: .standardOffer
         ),
-        DealCardItem(
+        NAStaggeredGridViewV1Model(
             title: "Eggs",
             subtitle: nil,
             discountText: "5% OFF",
@@ -55,7 +55,7 @@ public struct NAStaggeredGridViewV1: View {
             productImages: ["chicken_product", "chicken_product", "chicken_product"],
             cardType: .standardOffer
         ),
-        DealCardItem(
+        NAStaggeredGridViewV1Model(
             title: "BIG BRANDS\nBIG OFFERS",
             subtitle: nil,
             discountText: nil,
@@ -66,7 +66,7 @@ public struct NAStaggeredGridViewV1: View {
         )
     ]
     
-    let heroDeal = DealCardItem(
+    let heroDeal = NAStaggeredGridViewV1Model(
         title: "TOP\nDEALS",
         subtitle: "Tinted Lip\nBalm",
         discountText: nil,
@@ -125,7 +125,7 @@ public struct NAStaggeredGridViewV1: View {
 
 // MARK: - Reusable Dynamic Structural Card Component
 struct DynamicDealCardView: View {
-    let item: DealCardItem
+    let item: NAStaggeredGridViewV1Model
     
     private let textCrimson = Color(red: 245/255, green: 60/255, blue: 110/255)
     private let badgePink = Color(red: 254/255, green: 98/255, blue: 137/255)

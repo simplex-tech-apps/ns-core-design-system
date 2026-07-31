@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - Header Style Models
 public enum HeaderStyle {
     case standard(title: String, subtitle: String? = nil)
-    case seeAll(title: String, actionTitle: String = "View All", onAction: () -> Void)
+    case action(title: String, actionTitle: String = "View All", onAction: () -> Void)
     case searchBar(placeholder: String, searchText: Binding<String>, onSearchTap: (() -> Void)? = nil)
     case segmentedFilter(title: String, categories: [String], selectedIndex: Binding<Int>)
     case highlighted(title: String, subtitle: String)
@@ -29,8 +29,8 @@ public struct ReusableHeaderView: View {
         case .standard(let title, let subtitle):
             StandardHeaderView(title: title, subtitle: subtitle)
             
-        case .seeAll(let title, let actionTitle, let onAction):
-            SeeAllHeaderView(title: title, actionTitle: actionTitle, onAction: onAction)
+        case .action(let title, let actionTitle, let onAction):
+            ActionHeaderView(title: title, actionTitle: actionTitle, onAction: onAction)
             
         case .searchBar(let placeholder, let searchText, let onSearchTap):
             SearchBarHeaderView(placeholder: placeholder, searchText: searchText, onSearchTap: onSearchTap)
@@ -111,31 +111,31 @@ struct HighlightedHeaderView: View {
     }
 }
 
-struct SeeAllHeaderView: View {
+struct ActionHeaderView: View {
     let title: String
-    var actionTitle: String = "View All"
+    var actionTitle: String = "C"
     let onAction: () -> Void
     
     var body: some View {
         HStack {
             Text(title)
-                .font(.system(size: 18, weight: .bold))
+                .font(.system(size: 14, weight: .bold))
                 .foregroundColor(.primary)
             
             Spacer()
             
             Button(action: onAction) {
-                HStack(spacing: 4) {
-                    Text(actionTitle)
-                        .font(.system(size: 13, weight: .semibold))
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 10, weight: .bold))
-                }
+                Text(actionTitle)
+                    .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(Color(red: 226/255, green: 18/255, blue: 73/255))
             }
+            .buttonStyle(.plain)
         }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 12)
-        .padding(.vertical, 12)
+        .padding(.vertical, 8)
     }
 }
 
@@ -226,7 +226,7 @@ struct HeaderCatalogDemoView: View {
                 )
 
                 ReusableHeaderView(
-                    style: .seeAll(
+                    style: .action(
                         title: "Top Offers",
                         actionTitle: "See All",
                         onAction: { print("Navigate to all offers") }

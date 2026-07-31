@@ -48,6 +48,7 @@ public struct NAShopCardViewV2: View {
         costForTwo: "₹500 for two",
         isAd: true
     )
+    
     let onTap: () -> Void
         
     private let ratingGreen = Color(red: 16/255, green: 130/255, blue: 60/255)
