@@ -9,6 +9,77 @@
 import SwiftUI
 import Combine
 
+public struct NASearchBar: View {
+    @Binding public var searchText: String
+    @FocusState private var isFocused: Bool
+    
+    public var onBackTap: (() -> Void)?
+    public var onMicTap: (() -> Void)?
+    public var onSubmit: (() -> Void)?
+
+    public init(
+        searchText: Binding<String>,
+        onBackTap: (() -> Void)? = nil,
+        onMicTap: (() -> Void)? = nil,
+        onSubmit: (() -> Void)? = nil
+    ) {
+        self._searchText = searchText
+        self.onBackTap = onBackTap
+        self.onMicTap = onMicTap
+        self.onSubmit = onSubmit
+    }
+
+    public var body: some View {
+        HStack(spacing: 12) {
+            Button(action: {
+                onBackTap?()
+            }) {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+            }
+
+            TextField("Search for atta, dal, coke and more", text: $searchText)
+                .font(.system(size: 14, weight: .regular))
+                .foregroundColor(Color(red: 0.15, green: 0.15, blue: 0.15))
+                .focused($isFocused)
+                .submitLabel(.search)
+                .onSubmit {
+                    onSubmit?()
+                }
+
+            if !searchText.isEmpty {
+                Button(action: {
+                    searchText = ""
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 16))
+                        .foregroundColor(.gray.opacity(0.7))
+                }
+            }
+
+            Rectangle()
+                .fill(Color.gray.opacity(0.25))
+                .frame(width: 1, height: 22)
+                .padding(.horizontal, 2)
+            
+            Button(action: {
+                onMicTap?()
+            }) {
+                Image(systemName: "mic.fill")
+                    .font(.system(size: 16))
+                    .foregroundColor(Color(red: 0.2, green: 0.2, blue: 0.2))
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(Color(red: 253/255, green: 252/255, blue: 248/255))
+        .clipShape(Capsule())
+        .shadow(color: Color.black.opacity(0.08), radius: 10, x: 0, y: 4)
+        .shadow(color: Color.black.opacity(0.03), radius: 2, x: 0, y: 1)
+    }
+}
+
 public struct NATextField: View {
     //MARK: Observed Properties
     @State
