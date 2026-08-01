@@ -129,7 +129,7 @@ public struct NATabbarViewV3: View {
         }
         .frame(width: 75)
         .background(Color.white)
-        .shadow(color: Color.black.opacity(0.08), radius: 6, x: 4, y: 0)
+        .shadow(color: Color.black.opacity(0.05), radius: 6, x: 4, y: 0)
         .clipShape(RightOnlyShadowClipShape(shadowPadding: 20))
     }
 }
