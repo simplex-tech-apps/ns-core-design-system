@@ -48,23 +48,19 @@ public struct NATabbarViewV3: View {
                         
                         ZStack(alignment: .trailing) {
                             VStack(spacing: 4) {
-                                // Image container with fixed background circle & scaled image
                                 ZStack {
-                                    // 1. Static Size Background Circle
                                     Circle()
                                         .fill(
                                             isSelected
-                                            ? Color.green.opacity(0.15) // Selected light accent circle
-                                            : Color.gray.opacity(0.08)  // Unselected light subtle circle
+                                            ? Color.green.opacity(0.15)
+                                            : Color.gray.opacity(0.08)
                                         )
                                         .frame(width: 48, height: 48)
                                     
-                                    // 2. Scaled Image Only
                                     Image(category.imageName, bundle: .module)
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: 32, height: 32)
-                                        // 🎯 Scale effect applies strictly to the Image
                                         .scaleEffect(isSelected ? 1.15 : 1.0)
                                         .animation(
                                             .spring(response: 0.3, dampingFraction: 0.7),
@@ -93,7 +89,6 @@ public struct NATabbarViewV3: View {
                             .frame(maxWidth: .infinity)
                             .padding(.trailing, 6)
                         
-                            // Right Side Indicator Line
                             ZStack {
                                 if isSelected {
                                     UnevenRoundedRectangle(
@@ -134,7 +129,24 @@ public struct NATabbarViewV3: View {
         }
         .frame(width: 75)
         .background(Color.white)
-        .shadow(color: Color.black.opacity(0.04), radius: 4, x: 4, y: 0)
+        .shadow(color: Color.black.opacity(0.08), radius: 6, x: 4, y: 0)
+        .clipShape(RightOnlyShadowClipShape(shadowPadding: 20))
+    }
+}
+
+private struct RightOnlyShadowClipShape: Shape {
+    let shadowPadding: CGFloat
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let trailingRect = CGRect(
+            x: rect.minX,
+            y: rect.minY,
+            width: rect.width + shadowPadding,
+            height: rect.height
+        )
+        path.addRect(trailingRect)
+        return path
     }
 }
 
