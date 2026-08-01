@@ -76,16 +76,16 @@ public struct NAStaggeredGridViewV2CardView: View {
         HStack(spacing: 6) {
             if let icon = item.imageName {
                 Image(systemName: icon)
-                    .font(.system(size: 14))
+                    .font(.system(size: 12))
                     .foregroundColor(.orange)
             } else {
                 Image(systemName: "magnifyingglass")
-                    .font(.system(size: 13))
+                    .font(.system(size: 12))
                     .foregroundColor(.gray)
             }
             
             Text(item.text)
-                .font(.system(size: 14, weight: .medium))
+                .font(.system(size: 12, weight: .medium))
                 .foregroundColor(.black)
                 .lineLimit(1)
                 .fixedSize()
@@ -127,6 +127,7 @@ public struct NAStaggeredGridViewV2: View {
                             NAStaggeredGridViewV2CardView(item: item)
                         }
                     }
+                    .padding(.vertical, 2)
                     .padding(.horizontal, 12)
                 }
                 
@@ -137,6 +138,7 @@ public struct NAStaggeredGridViewV2: View {
                             NAStaggeredGridViewV2CardView(item: item)
                         }
                     }
+                    .padding(.vertical, 2)
                     .padding(.horizontal, 12)
                 }
             }
