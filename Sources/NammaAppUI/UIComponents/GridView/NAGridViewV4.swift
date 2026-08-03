@@ -8,7 +8,7 @@
 import SwiftUI
 
 // MARK: - Product Model
-public struct NAHorizontalGrid_NxN_V3Model: Identifiable {
+public struct NAGridViewV4Model: Identifiable {
     public let id = UUID()
     public let imageName: String
     public let currentPrice: Int
@@ -43,9 +43,18 @@ public struct NAHorizontalGrid_NxN_V3Model: Identifiable {
     }
 }
 
+struct DottedLineShape: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: 0, y: rect.height / 2))
+        path.addLine(to: CGPoint(x: rect.width, y: rect.height / 2))
+        return path
+    }
+}
+
 // MARK: - Dynamic Grid Component
-public struct NAHorizontalGrid_NxN_V3: View {
-    @State private var products: [NAHorizontalGrid_NxN_V3Model]
+public struct NAGridViewV4: View {
+    @State private var products: [NAGridViewV4Model]
 
     let rowCount: Int
     let columnCount: Int
@@ -70,7 +79,7 @@ public struct NAHorizontalGrid_NxN_V3: View {
         rowCount: Int = 1,
         columnCount: Int = 2,
         scrollDirection: Axis.Set = .horizontal,
-        products: [NAHorizontalGrid_NxN_V3Model] = NAHorizontalGrid_NxN_V3.defaultProducts
+        products: [NAGridViewV4Model] = NAGridViewV4.defaultProducts
     ) {
         self.rowCount = rowCount
         self.columnCount = columnCount
@@ -84,7 +93,7 @@ public struct NAHorizontalGrid_NxN_V3: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: gridRows, alignment: .top, spacing: 12) {
                         ForEach($products) { $product in
-                            NAHorizontalGrid_NxN_V3_CardView(product: $product)
+                            NAGridViewV4CardView(product: $product)
                                 .frame(width: 110)
                         }
                     }
@@ -95,7 +104,7 @@ public struct NAHorizontalGrid_NxN_V3: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     LazyVGrid(columns: gridColumns, spacing: 16) {
                         ForEach($products) { $product in
-                            NAHorizontalGrid_NxN_V3_CardView(product: $product)
+                            NAGridViewV4CardView(product: $product)
                         }
                     }
                     .padding(.horizontal, 12)
@@ -109,9 +118,9 @@ public struct NAHorizontalGrid_NxN_V3: View {
 }
 
 // MARK: - Default Mock Data
-extension NAHorizontalGrid_NxN_V3 {
-    public static let defaultProducts: [NAHorizontalGrid_NxN_V3Model] = [
-        NAHorizontalGrid_NxN_V3Model(
+extension NAGridViewV4 {
+    public static let defaultProducts: [NAGridViewV4Model] = [
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 35,
             originalPrice: 63,
@@ -119,7 +128,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Organically Grown Ginger",
             weightInfo: "100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 8,
             originalPrice: 26,
@@ -127,7 +136,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Chilli Green (Pachchai Mi...",
             weightInfo: "100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 13,
             originalPrice: 40,
@@ -135,7 +144,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Coriander Leaves (Koth...",
             weightInfo: "80 - 100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 35,
             originalPrice: 63,
@@ -143,7 +152,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Organically Grown Ginger",
             weightInfo: "100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 8,
             originalPrice: 26,
@@ -151,7 +160,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Chilli Green (Pachchai Mi...",
             weightInfo: "100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 13,
             originalPrice: 40,
@@ -159,7 +168,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Coriander Leaves (Koth...",
             weightInfo: "80 - 100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 13,
             originalPrice: 40,
@@ -167,7 +176,7 @@ extension NAHorizontalGrid_NxN_V3 {
             title: "Coriander Leaves (Koth...",
             weightInfo: "80 - 100 g"
         ),
-        NAHorizontalGrid_NxN_V3Model(
+        NAGridViewV4Model(
             imageName: "vegetables",
             currentPrice: 35,
             originalPrice: 63,
@@ -179,8 +188,8 @@ extension NAHorizontalGrid_NxN_V3 {
 }
 
 // MARK: - Card Component
-struct NAHorizontalGrid_NxN_V3_CardView: View {
-    @Binding var product: NAHorizontalGrid_NxN_V3Model
+struct NAGridViewV4CardView: View {
+    @Binding var product: NAGridViewV4Model
     
     private let primaryPink = Color(red: 236/255, green: 18/255, blue: 90/255)
     private let darkGreenBadge = Color(
@@ -335,7 +344,7 @@ struct NAHorizontalGrid_NxN_V3_CardView: View {
 
 // MARK: - Previews
 #Preview("Horizontal (2 Rows Fixed Width)") {
-    NAHorizontalGrid_NxN_V3(
+    NAGridViewV4(
         rowCount: 2,
         columnCount: 0,
         scrollDirection: .horizontal
@@ -343,7 +352,7 @@ struct NAHorizontalGrid_NxN_V3_CardView: View {
 }
 
 #Preview("Vertical (2 Columns Auto-Filled)") {
-    NAHorizontalGrid_NxN_V3(
+    NAGridViewV4(
         rowCount: 0,
         columnCount: 2,
         scrollDirection: .vertical

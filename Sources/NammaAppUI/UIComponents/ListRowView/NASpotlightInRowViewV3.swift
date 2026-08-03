@@ -41,7 +41,6 @@ public struct NASpotlightInRowViewV3: View {
                         .frame(width: 130, height: 95)
                 }
                 .padding(.horizontal, 16)
-                //NATabbarViewV1(categories: categories)
                 .padding(.bottom)
                 NAHorizontalGrid_NxN_V2()
                 SeeAllButtonViewV1 {
