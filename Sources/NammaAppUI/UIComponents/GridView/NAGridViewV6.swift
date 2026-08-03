@@ -118,7 +118,6 @@ public struct NAGridViewV6CardView: View {
     
     public var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            
             VStack(alignment: .leading, spacing: 0) {
                 Text(category.title)
                     .font(.system(size: 16, weight: .bold, design: .rounded))

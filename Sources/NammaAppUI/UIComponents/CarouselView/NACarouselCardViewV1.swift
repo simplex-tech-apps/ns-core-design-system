@@ -135,13 +135,6 @@ struct NACarouselCardViewV1: View {
                             }
                             .foregroundColor(.blue)
                             .padding(.top, 2)
-//                            .overlay(
-//                                LineStylePattern()
-//                                    .stroke(style: StrokeStyle(lineWidth: 1, lineCap: .round, lineJoin: .miter, dash: [1, 2]))
-//                                    .foregroundColor(.blue)
-//                                    .frame(height: 1)
-//                                    .padding(.top, 16)
-//                            )
                         }
                     }
                 }

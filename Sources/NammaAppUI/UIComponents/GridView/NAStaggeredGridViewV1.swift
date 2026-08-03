@@ -105,7 +105,11 @@ public struct NAStaggeredGridViewV1: View {
                 }
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
-            .background(Color(red: 255/255, green: 212/255, blue: 225/255))
+            .background(Color(
+                red: 242/255,
+                green: 242/255,
+                blue: 244/255
+            ))
         }
         .frame(height: calculatedTotalHeight(screenWidth: UIScreen.main.bounds.width))
         .fixedSize(horizontal: false, vertical: true)
