@@ -191,7 +191,7 @@ public struct NAGridViewV3CardView: View {
 }
 
 // MARK: - Previews
-#Preview("Horizontal 2-Row Grid (Cells maintain size)") {
+#Preview("Dynamic Horizontal Grid") {
     let mockData = [
         NAGridViewV3Model(name: "Premium Goat + Chicken Combo", images: ["img1", "img2"]),
         NAGridViewV3Model(name: "Fresh Seafood Special Platter", images: ["img1", "img2"]),
