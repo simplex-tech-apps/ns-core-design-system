@@ -45,8 +45,91 @@ public struct NACarouselV2Model: Identifiable, Hashable {
     }
 }
 
+// MARK: - Fully Dynamic Carousel Container View
 public struct NACarouselViewV2: View {
-    let items = [
+    @Binding public var items: [NACarouselV2Model]
+    
+    public var cardHeight: CGFloat
+    public var cardWidthRatio: CGFloat
+    public var explicitCardWidth: CGFloat?
+    public var gridSpacing: CGFloat
+    public var horizontalPadding: CGFloat
+    public var cardCornerRadius: CGFloat
+    public var imageWidth: CGFloat
+    public var imageHeight: CGFloat
+    
+    public var onItemTap: ((NACarouselV2Model) -> Void)?
+    public var onButtonTap: ((NACarouselV2Model) -> Void)?
+    
+    private var gridRows: [GridItem] {
+        [GridItem(.fixed(cardHeight), spacing: gridSpacing)]
+    }
+
+    public init(
+        items: Binding<[NACarouselV2Model]>,
+        cardHeight: CGFloat = 180,
+        cardWidthRatio: CGFloat = 1.25,
+        explicitCardWidth: CGFloat? = nil,
+        gridSpacing: CGFloat = 12,
+        horizontalPadding: CGFloat = 12,
+        cardCornerRadius: CGFloat = 24,
+        imageWidth: CGFloat = 140,
+        imageHeight: CGFloat = 140,
+        onButtonTap: ((NACarouselV2Model) -> Void)? = nil,
+        onItemTap: ((NACarouselV2Model) -> Void)? = nil
+    ) {
+        self._items = items
+        self.cardHeight = cardHeight
+        self.cardWidthRatio = cardWidthRatio
+        self.explicitCardWidth = explicitCardWidth
+        self.gridSpacing = gridSpacing
+        self.horizontalPadding = horizontalPadding
+        self.cardCornerRadius = cardCornerRadius
+        self.imageWidth = imageWidth
+        self.imageHeight = imageHeight
+        self.onButtonTap = onButtonTap
+        self.onItemTap = onItemTap
+    }
+
+    public var body: some View {
+        GeometryReader { outerGeometry in
+            let screenWidth = outerGeometry.size.width
+            let calculatedWidth = explicitCardWidth ?? (screenWidth / cardWidthRatio)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHGrid(rows: gridRows, alignment: .center, spacing: gridSpacing) {
+                    ForEach(items) { item in
+                        NACarouselCardViewV2(
+                            item: item,
+                            cardCornerRadius: cardCornerRadius,
+                            imageWidth: imageWidth,
+                            imageHeight: imageHeight,
+                            onButtonTap: {
+                                if let onButtonTap = onButtonTap {
+                                    onButtonTap(item)
+                                } else {
+                                    onItemTap?(item)
+                                }
+                            },
+                            onTap: {
+                                onItemTap?(item)
+                            }
+                        )
+                        .frame(width: calculatedWidth, height: cardHeight)
+                    }
+                }
+                .padding(.horizontal, horizontalPadding)
+            }
+        }
+        .frame(height: cardHeight)
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.hidden)
+    }
+}
+
+// MARK: - Default Input Parameters & Mock Extensions
+extension NACarouselViewV2 {
+    public static let defaultItems = [
         NACarouselV2Model(
             title: "Care You Can\nCount On",
             subtitle: "Feminine hygiene picks designed for ease & comfort",
@@ -75,36 +158,30 @@ public struct NACarouselViewV2: View {
             bannerImageName: "chicken_product"
         )
     ]
-    
-    private let gridRows: [GridItem] = [
-        GridItem(.fixed(180), spacing: 24)
-    ]
-    
-    public init() {}
-    
-    public var body: some View {
-        GeometryReader { outerGeometry in
-            let screenWidth = outerGeometry.size.width
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHGrid(rows: gridRows, alignment: .top, spacing: 12) {
-                    ForEach(items) { item in
-                        NACarouselCardViewV2(item: item) {
-                            
-                        }
-                        .frame(width: screenWidth/1.25)
-                    }
-                } 
-                .padding(.horizontal, 12)
+}
+
+// MARK: - Demo Usage Screen
+struct NACarouselViewV2DemoScreen: View {
+    @State private var carouselItems = NACarouselViewV2.defaultItems
+
+    var body: some View {
+        NACarouselViewV2(
+            items: $carouselItems,
+            cardHeight: 180,
+            cardWidthRatio: 1.25,
+            gridSpacing: 12,
+            horizontalPadding: 16,
+            onButtonTap: { selectedItem in
+               
+            },
+            onItemTap: { selectedItem in
+               
             }
-        }
-        .listRowInsets(EdgeInsets())
-        .listRowSeparator(.hidden)
-        .frame(height: 180)
+        )
     }
 }
 
 // MARK: - Preview Setup Engine
 #Preview {
-    NACarouselViewV2()
+    NACarouselViewV2DemoScreen()
 }
