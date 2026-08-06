@@ -20,22 +20,32 @@ public struct NAGridViewV5Model: Identifiable, Equatable {
     }
 }
 
-// MARK: - Card Shape Style Enum
+// MARK: - Expanded Card Shape Style Enum
 public enum NAGridCardShape {
     case square
     case rectangle
-
-    var imageAspectRatio: CGFloat {
-        switch self {
-        case .square: return 1.0
-        case .rectangle: return 0.85
-        }
-    }
+    case verticalRectangle
+    case horizontalRectangle
 
     var defaultCardAspectRatio: CGFloat {
         switch self {
-        case .square: return 0.85
-        case .rectangle: return 0.68
+        case .square:
+            return 1.0
+        case .rectangle, .verticalRectangle:
+            return 0.72
+        case .horizontalRectangle:
+            return 1.35
+        }
+    }
+    
+    var imageBoxAspectRatio: CGFloat {
+        switch self {
+        case .square:
+            return 1.0
+        case .rectangle, .verticalRectangle:
+            return 0.85
+        case .horizontalRectangle:
+            return 1.75
         }
     }
 }
@@ -79,12 +89,11 @@ public struct NAGridViewV5: View {
     public var body: some View {
         ScrollView(scrollAxis, showsIndicators: false) {
             gridContainer
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
+                .padding(.horizontal, spacing == 0 ? 0 : 12)
+                .padding(.vertical, spacing == 0 ? 0 : 8)
         }
         .listRowInsets(EdgeInsets())
         .listRowSeparator(.hidden)
-        .background(Color(.systemBackground))
     }
 }
 
@@ -99,11 +108,12 @@ private extension NAGridViewV5 {
     var gridContainer: some View {
         if orientation == .horizontal {
             let cardWidth = baseCardHeight * cardAspectRatio
-            let rows = Array(repeating: GridItem(.fixed(baseCardHeight), spacing: spacing), count: gridCount)
-            let totalGridHeight = (baseCardHeight * CGFloat(gridCount)) + (spacing * CGFloat(gridCount - 1))
+            let calculatedHeight = (cardWidth / cardShape.imageBoxAspectRatio) + 28
+            let rows = Array(repeating: GridItem(.fixed(calculatedHeight), spacing: spacing), count: gridCount)
+            let totalGridHeight = (calculatedHeight * CGFloat(gridCount)) + (spacing * CGFloat(gridCount - 1))
             
             LazyHGrid(rows: rows, alignment: .top, spacing: spacing) {
-                gridItems(cardWidth: cardWidth, cardHeight: baseCardHeight)
+                gridItems(cardWidth: cardWidth, cardHeight: calculatedHeight)
             }
             .frame(height: totalGridHeight)
         } else {
@@ -121,7 +131,8 @@ private extension NAGridViewV5 {
             NAGridViewV5CardView(
                 category: category,
                 cardShape: cardShape,
-                backgroundColor: backgroundColor
+                backgroundColor: backgroundColor,
+                isHorizontal: orientation == .horizontal
             )
             .frame(width: cardWidth, height: cardHeight)
             .contentShape(Rectangle())
@@ -132,45 +143,79 @@ private extension NAGridViewV5 {
     }
 }
 
-// MARK: - Card Component
+// MARK: - Card Component (Title Overlap Fixed)
 public struct NAGridViewV5CardView: View {
     public let category: NAGridViewV5Model
     public var cardShape: NAGridCardShape
     public var backgroundColor: Color
+    public var isHorizontal: Bool
     
     public init(
         category: NAGridViewV5Model,
         cardShape: NAGridCardShape = .rectangle,
-        backgroundColor: Color = Color(red: 238/255, green: 244/255, blue: 252/255)
+        backgroundColor: Color = Color(red: 238/255, green: 244/255, blue: 252/255),
+        isHorizontal: Bool = false
     ) {
         self.category = category
         self.cardShape = cardShape
         self.backgroundColor = backgroundColor
+        self.isHorizontal = isHorizontal
     }
     
     public var body: some View {
-        VStack(spacing: 4) {
+        if isHorizontal {
+            GeometryReader { geo in
+                let imageContainerHeight = geo.size.width / cardShape.imageBoxAspectRatio
+                cardContent(containerWidth: geo.size.width, imageContainerHeight: imageContainerHeight)
+            }
+            .clipped()
+        } else {
+            VStack(spacing: 0) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(backgroundColor)
+                    
+                    Image(category.productImage, bundle: .module)
+                        .resizable()
+                        .scaledToFit()
+                        .padding(4)
+                }
+                .aspectRatio(cardShape.imageBoxAspectRatio, contentMode: .fit)
+                
+                Text(category.title)
+                    .font(.system(size: 10, weight: .semibold, design: .default))
+                    .foregroundColor(Color(red: 44/255, green: 53/255, blue: 71/255))
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .frame(height: 28)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func cardContent(containerWidth: CGFloat, imageContainerHeight: CGFloat) -> some View {
+        VStack(spacing: 0) {
             ZStack {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(backgroundColor)
                 
                 Image(category.productImage, bundle: .module)
                     .resizable()
                     .scaledToFit()
-                    .padding(6)
+                    .padding(4)
             }
-            .aspectRatio(cardShape.imageAspectRatio, contentMode: .fit)
+            .frame(width: containerWidth, height: imageContainerHeight)
             
             Text(category.title)
                 .font(.system(size: 10, weight: .semibold, design: .default))
                 .foregroundColor(Color(red: 44/255, green: 53/255, blue: 71/255))
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
-                .minimumScaleFactor(0.85)
-                .frame(maxWidth: .infinity, alignment: .top)
-                .padding(.horizontal, 2)
+                .minimumScaleFactor(0.8)
+                .frame(width: containerWidth, height: 28, alignment: .center)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
 }
 
@@ -181,41 +226,63 @@ extension NAGridViewV5 {
         NAGridViewV5Model(title: "Vitamin &\nSupplements", productImage: "chicken_product"),
         NAGridViewV5Model(title: "Pain\nRelief", productImage: "chicken_product"),
         NAGridViewV5Model(title: "Elderly\nCare", productImage: "chicken_product"),
-        NAGridViewV5Model(title: "Ayurveda &\nImmnunity", productImage: "chicken_product"),
+        NAGridViewV5Model(title: "Ayurveda &\nImmunity", productImage: "chicken_product"),
         NAGridViewV5Model(title: "Stomach\nCare", productImage: "chicken_product"),
         NAGridViewV5Model(title: "Derma\nCare", productImage: "chicken_product"),
         NAGridViewV5Model(title: "Medical\nDevices", productImage: "chicken_product")
     ]
 }
 
-// MARK: - Preview Variations
-#Preview("Vertical Grid (Rectangle, Custom Color)") {
+// MARK: - All Preview Variations (Corrected)
+#Preview("Vertical Grid (Vertical Rectangle)") {
     NAGridViewV5(
         items: NAGridViewV5.defaultCategories,
         orientation: .vertical,
         gridCount: 4,
         spacing: 10,
-        cardShape: .rectangle,
+        cardShape: .verticalRectangle,
         backgroundColor: Color(red: 238/255, green: 244/255, blue: 252/255)
     )
 }
 
-#Preview("Horizontal Grid (Square Cells)") {
+#Preview("Vertical Grid (Horizontal Rectangle)") {
+    NAGridViewV5(
+        items: NAGridViewV5.defaultCategories,
+        orientation: .vertical,
+        gridCount: 2,
+        spacing: 10,
+        cardShape: .horizontalRectangle,
+        backgroundColor: Color(red: 238/255, green: 244/255, blue: 252/255)
+    )
+}
+
+#Preview("Horizontal Grid (Horizontal Rectangle)") {
     NAGridViewV5(
         items: NAGridViewV5.defaultCategories,
         orientation: .horizontal,
         gridCount: 2,
         spacing: 10,
-        cardShape: .rectangle,
+        cardShape: .horizontalRectangle,
         backgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
     )
 }
 
-#Preview("Vertical Grid (Rectangle, Custom Color)") {
+#Preview("Horizontal Grid (Vertical Rectangle)") {
+    NAGridViewV5(
+        items: NAGridViewV5.defaultCategories,
+        orientation: .horizontal,
+        gridCount: 2,
+        spacing: 10,
+        cardShape: .verticalRectangle,
+        backgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
+    )
+}
+
+#Preview("Vertical Grid (Square Cells)") {
     NAGridViewV5(
         items: NAGridViewV5.defaultCategories,
         orientation: .vertical,
-        gridCount: 4,
+        gridCount: 3,
         spacing: 10,
         cardShape: .square,
         backgroundColor: Color(red: 218/255, green: 247/255, blue: 194/255)
@@ -226,11 +293,11 @@ extension NAGridViewV5 {
     NAGridViewV5(
         items: NAGridViewV5.defaultCategories,
         orientation: .horizontal,
-        gridCount: 2,
+        gridCount: 1,
         spacing: 10,
-        cardShape: .rectangle,
+        cardShape: .square,
         backgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
-    ) {_ in 
-        
+    ) { selectedCategory in
+        print("Selected category: \(selectedCategory.title)")
     }
 }
