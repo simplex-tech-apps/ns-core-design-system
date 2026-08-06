@@ -35,6 +35,7 @@ public struct NATabbarViewV2: View {
     public var cornerRadius: CGFloat
     public var fontSize: CGFloat
     public var indicatorHeight: CGFloat
+    public var spacing: CGFloat
 
     public var activeIconBoxBackground: Color
     public var inactiveIconBoxBackground: Color
@@ -68,6 +69,7 @@ public struct NATabbarViewV2: View {
         dividerColor: Color = .black.opacity(0.05),
         backgroundColor: Color = .clear,
         horizontalPadding: CGFloat = 16,
+        spacing: CGFloat = 0,
         onCategorySelected: ((NATabCategoryItemModel) -> Void)? = nil
     ) {
         self.categories = categories
@@ -89,13 +91,14 @@ public struct NATabbarViewV2: View {
         self.backgroundColor = backgroundColor
         self.horizontalPadding = horizontalPadding
         self.onCategorySelected = onCategorySelected
+        self.spacing = spacing
     }
     
     public var body: some View {
         ZStack(alignment: .bottom) {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(alignment: .top, spacing: 0) {
+                    HStack(alignment: .top, spacing: spacing) {
                         ForEach(categories) { category in
                             let isSelected = category.id == selectedCategoryId
                             
