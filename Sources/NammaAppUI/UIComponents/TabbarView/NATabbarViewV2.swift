@@ -1,5 +1,5 @@
 //
-//  NATabbarViewV1.swift
+//  NATabbarViewV2.swift
 //  NammaAppUI
 //
 //  Created by apple on 20/07/26.
@@ -7,63 +7,88 @@
 
 import SwiftUI
 
-// MARK: - Models
-public struct TabbarCategoryV2Model: Identifiable, Hashable {
-    public init(title: String, imageName: String) {
+// MARK: - Generic Dynamic Category Tab Model
+public struct NATabCategoryItemModel: Identifiable, Hashable {
+    public let id: String
+    public let title: String
+    public let iconName: String
+    public let isSystemIcon: Bool
+    
+    public init(id: String, title: String, iconName: String, isSystemIcon: Bool = false) {
+        self.id = id
         self.title = title
-        self.imageName = imageName
-    }
-    
-    public let id = UUID()
-    let title: String
-    let imageName: String
-}
-
-public enum NammaShopFreshTabCategories: String, CaseIterable, Identifiable {
-    case vegetable
-    case fruit
-    case seasonsBest
-    case bread
-    case dairy
-    case milkshake
-    case juice
-    
-    public var id: String { self.rawValue }
-    
-    public var title: String {
-        switch self {
-        case .vegetable: return "Veggies"
-        case .fruit: return "Fruits"
-        case .seasonsBest: return "Season's\nBest"
-        case .bread: return "Breads & \nEgg"
-        case .dairy: return "Dairy\nEssentials"
-        case .milkshake: return "Milkshakes & \nYogurts"
-        case .juice: return "Juices & \nSalads"
-        }
-    }
-    
-    public var iconName: String {
-        switch self {
-        case .vegetable: return "vegetables"
-        case .fruit: return "vegetables"
-        case .seasonsBest: return "vegetables"
-        case .bread: return "vegetables"
-        case .dairy: return "vegetables"
-        case .milkshake: return "vegetables"
-        case .juice: return "vegetables"
-        }
+        self.iconName = iconName
+        self.isSystemIcon = isSystemIcon
     }
 }
 
-import SwiftUI
-
+// MARK: - Fully Configurable Dynamic Tabbar Component
 public struct NATabbarViewV2: View {
+    public var categories: [NATabCategoryItemModel]
+    @Binding public var selectedCategoryId: String
 
-    @Binding var selectedCategory: NammaShopFreshTabCategories
+    public var itemWidth: CGFloat
+    public var iconBoxWidth: CGFloat
+    public var iconBoxHeight: CGFloat
+    public var iconWidth: CGFloat
+    public var iconHeight: CGFloat
+    public var cornerRadius: CGFloat
+    public var fontSize: CGFloat
+    public var indicatorHeight: CGFloat
+
+    public var activeIconBoxBackground: Color
+    public var inactiveIconBoxBackground: Color
+    public var activeTextColor: Color
+    public var inactiveTextColor: Color
+    public var indicatorColor: Color
+    public var dividerColor: Color
+    public var backgroundColor: Color
+    public var horizontalPadding: CGFloat
+    
+    public var onCategorySelected: ((NATabCategoryItemModel) -> Void)?
+    
     @Namespace private var categoryBarNamespace
     
-    public init(selectedCategory: Binding<NammaShopFreshTabCategories>) {
-        self._selectedCategory = selectedCategory
+    public init(
+        categories: [NATabCategoryItemModel],
+        selectedCategoryId: Binding<String>,
+        itemWidth: CGFloat = 76,
+        iconBoxWidth: CGFloat = 44,
+        iconBoxHeight: CGFloat = 44,
+        iconWidth: CGFloat = 30,
+        iconHeight: CGFloat = 30,
+        cornerRadius: CGFloat = 8,
+        fontSize: CGFloat = 10,
+        indicatorHeight: CGFloat = 2,
+        activeIconBoxBackground: Color = Color(red: 218/255, green: 247/255, blue: 194/255).opacity(0.35),
+        inactiveIconBoxBackground: Color = Color(.systemGray6),
+        activeTextColor: Color = .black,
+        inactiveTextColor: Color = .black.opacity(0.6),
+        indicatorColor: Color = .green,
+        dividerColor: Color = .black.opacity(0.05),
+        backgroundColor: Color = .clear,
+        horizontalPadding: CGFloat = 16,
+        onCategorySelected: ((NATabCategoryItemModel) -> Void)? = nil
+    ) {
+        self.categories = categories
+        self._selectedCategoryId = selectedCategoryId
+        self.itemWidth = itemWidth
+        self.iconBoxWidth = iconBoxWidth
+        self.iconBoxHeight = iconBoxHeight
+        self.iconWidth = iconWidth
+        self.iconHeight = iconHeight
+        self.cornerRadius = cornerRadius
+        self.fontSize = fontSize
+        self.indicatorHeight = indicatorHeight
+        self.activeIconBoxBackground = activeIconBoxBackground
+        self.inactiveIconBoxBackground = inactiveIconBoxBackground
+        self.activeTextColor = activeTextColor
+        self.inactiveTextColor = inactiveTextColor
+        self.indicatorColor = indicatorColor
+        self.dividerColor = dividerColor
+        self.backgroundColor = backgroundColor
+        self.horizontalPadding = horizontalPadding
+        self.onCategorySelected = onCategorySelected
     }
     
     public var body: some View {
@@ -71,47 +96,50 @@ public struct NATabbarViewV2: View {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(alignment: .top, spacing: 0) {
-                        ForEach(NammaShopFreshTabCategories.allCases) { category in
-                            let isSelected = category == selectedCategory
+                        ForEach(categories) { category in
+                            let isSelected = category.id == selectedCategoryId
                             
                             VStack(spacing: 6) {
                                 ZStack {
-                                    Image(category.iconName, bundle: .module)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(isSelected ? .white : .black.opacity(0.7))
+                                    if category.isSystemIcon {
+                                        Image(systemName: category.iconName)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: iconWidth, height: iconHeight)
+                                            .foregroundColor(isSelected ? activeTextColor : inactiveTextColor)
+                                    } else {
+                                        Image(category.iconName, bundle: .module)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: iconWidth, height: iconHeight)
+                                    }
                                 }
-                                .frame(width: 44, height: 44)
+                                .frame(width: iconBoxWidth, height: iconBoxHeight)
                                 .background(
-                                    isSelected
-                                    ? Color(red: 218/255, green: 247/255, blue: 194/255).opacity(0.25)
-                                    : Color(.systemGray6)
+                                    isSelected ? activeIconBoxBackground : inactiveIconBoxBackground
                                 )
-                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
                                 .padding(.top, 6)
-                                
+
                                 Text(category.title)
                                     .font(
                                         .system(
-                                            size: 10,
+                                            size: fontSize,
                                             weight: isSelected ? .semibold : .regular
                                         )
                                     )
-                                    .foregroundColor(
-                                        isSelected ? .black : .black.opacity(0.6)
-                                    )
+                                    .foregroundColor(isSelected ? activeTextColor : inactiveTextColor)
                                     .multilineTextAlignment(.center)
                                     .lineLimit(2)
                                     .fixedSize(horizontal: false, vertical: true)
                                     .frame(height: 28, alignment: .top)
-                                    .animation(.none, value: selectedCategory)
-                                
+                                    .animation(.none, value: selectedCategoryId)
+
                                 ZStack {
                                     if isSelected {
                                         Rectangle()
-                                            .fill(Color.green)
-                                            .frame(height: 2)
+                                            .fill(indicatorColor)
+                                            .frame(height: indicatorHeight)
                                             .matchedGeometryEffect(
                                                 id: "activeTabLine",
                                                 in: categoryBarNamespace
@@ -119,29 +147,31 @@ public struct NATabbarViewV2: View {
                                     } else {
                                         Rectangle()
                                             .fill(Color.clear)
-                                            .frame(height: 2)
+                                            .frame(height: indicatorHeight)
                                     }
                                 }
                             }
-                            .frame(width: 76)
+                            .frame(width: itemWidth)
                             .contentShape(Rectangle())
-                            .id(category)
+                            .id(category.id)
                             .onTapGesture {
                                 withAnimation(
                                     .spring(response: 0.35, dampingFraction: 0.75)
                                 ) {
-                                    selectedCategory = category
-                                    proxy.scrollTo(category, anchor: .center)
+                                    selectedCategoryId = category.id
+                                    proxy.scrollTo(category.id, anchor: .center)
                                 }
+                                onCategorySelected?(category)
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, horizontalPadding)
                 }
             }
-            
+            .background(backgroundColor)
+
             Rectangle()
-                .fill(Color.black.opacity(0.05))
+                .fill(dividerColor)
                 .frame(height: 1)
         }
         .listRowInsets(EdgeInsets())
@@ -152,11 +182,24 @@ public struct NATabbarViewV2: View {
 // MARK: - Preview Setup Engine
 #Preview {
     struct PreviewWrapper: View {
-        @State private var category: NammaShopFreshTabCategories = .vegetable
+        @State private var selectedId = "veggies"
+        
+        let tabItems = [
+            NATabCategoryItemModel(id: "veggies", title: "Veggies", iconName: "leaf.fill", isSystemIcon: true),
+            NATabCategoryItemModel(id: "fruits", title: "Fruits", iconName: "apple.logo", isSystemIcon: true),
+            NATabCategoryItemModel(id: "dairy", title: "Dairy &\nMilk", iconName: "cup.and.saucer.fill", isSystemIcon: true),
+            NATabCategoryItemModel(id: "bakery", title: "Breads &\nCakes", iconName: "birthday.cake.fill", isSystemIcon: true),
+            NATabCategoryItemModel(id: "beverages", title: "Juices &\nDrinks", iconName: "wineglass.fill", isSystemIcon: true)
+        ]
         
         var body: some View {
-            VStack {
-                NATabbarViewV2(selectedCategory: $category)
+            NATabbarViewV2(
+                categories: tabItems,
+                selectedCategoryId: $selectedId,
+                activeIconBoxBackground: Color.green.opacity(0.15),
+                indicatorColor: .red
+            ) { selectedCategory in
+               
             }
         }
     }

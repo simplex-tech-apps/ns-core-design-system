@@ -7,6 +7,24 @@
 
 import SwiftUI
 
+// MARK: - Card Shape Enum
+public enum NACardShape {
+    case rectangle
+    case roundedRectangle(cornerRadius: CGFloat)
+    case capsule
+    
+    var cornerRadius: CGFloat {
+        switch self {
+        case .rectangle:
+            return 0
+        case .roundedRectangle(let radius):
+            return radius
+        case .capsule:
+            return 20
+        }
+    }
+}
+
 // MARK: - Product Model
 public struct NAGridViewV6Model: Identifiable, Hashable {
     public let id: UUID
@@ -31,36 +49,39 @@ public struct NAGridViewV6Model: Identifiable, Hashable {
 public struct NAGridViewV6: View {
     
     public var items: [NAGridViewV6Model]
-    public var scrollDirection: Axis.Set
-    public var columnCount: Int
-    public var rowCount: Int
+    public var orientation: NAGridOrientation
+    public var gridCount: Int
     public var spacing: CGFloat
     public var cardHeight: CGFloat
     public var cardAspectRatio: CGFloat
+    public var cardShape: NACardShape
+    public var backgroundColor: Color?
     public var onItemTap: ((NAGridViewV6Model) -> Void)?
     
     public init(
-        items: [NAGridViewV6Model] = NAGridViewV4.defaultCategories,
-        rowCount: Int = 0,
-        columnCount: Int = 2,
-        scrollDirection: Axis.Set = .vertical,
+        items: [NAGridViewV6Model] = NAGridViewV6.defaultCategories,
+        orientation: NAGridOrientation = .vertical,
+        gridCount: Int = 2,
         spacing: CGFloat = 8,
         cardHeight: CGFloat = 140,
         cardAspectRatio: CGFloat = 135 / 140,
+        cardShape: NACardShape = .roundedRectangle(cornerRadius: 20),
+        backgroundColor: Color? = nil,
         onItemTap: ((NAGridViewV6Model) -> Void)? = nil
     ) {
         self.items = items
-        self.rowCount = rowCount
-        self.columnCount = max(1, columnCount)
-        self.scrollDirection = scrollDirection
+        self.orientation = orientation
+        self.gridCount = max(1, gridCount)
         self.spacing = spacing
         self.cardHeight = cardHeight
         self.cardAspectRatio = cardAspectRatio
+        self.cardShape = cardShape
+        self.backgroundColor = backgroundColor
         self.onItemTap = onItemTap
     }
     
     public var body: some View {
-        ScrollView(scrollDirection, showsIndicators: false) {
+        ScrollView(scrollAxis, showsIndicators: false) {
             gridContainer
                 .padding(.horizontal, 12)
                 .padding(.vertical, 8)
@@ -74,20 +95,23 @@ public struct NAGridViewV6: View {
 // MARK: - Layout Calculations & Helpers
 private extension NAGridViewV6 {
     
+    var scrollAxis: Axis.Set {
+        orientation == .horizontal ? .horizontal : .vertical
+    }
+    
     @ViewBuilder
     var gridContainer: some View {
-        if scrollDirection == .horizontal {
-            let activeRows = rowCount > 0 ? rowCount : 1
+        if orientation == .horizontal {
             let cardWidth = cardHeight * cardAspectRatio
-            let rows = Array(repeating: GridItem(.fixed(cardHeight), spacing: spacing), count: activeRows)
-            let totalGridHeight = (cardHeight * CGFloat(activeRows)) + (spacing * CGFloat(activeRows - 1))
+            let rows = Array(repeating: GridItem(.fixed(cardHeight), spacing: spacing), count: gridCount)
+            let totalGridHeight = (cardHeight * CGFloat(gridCount)) + (spacing * CGFloat(gridCount - 1))
             
             LazyHGrid(rows: rows, alignment: .top, spacing: spacing) {
                 gridItems(cardWidth: cardWidth, cardHeight: cardHeight)
             }
             .frame(height: totalGridHeight)
         } else {
-            let columns = Array(repeating: GridItem(.flexible(), spacing: spacing), count: columnCount)
+            let columns = Array(repeating: GridItem(.flexible(), spacing: spacing), count: gridCount)
             
             LazyVGrid(columns: columns, spacing: spacing) {
                 gridItems(cardWidth: nil, cardHeight: cardHeight)
@@ -98,12 +122,16 @@ private extension NAGridViewV6 {
     @ViewBuilder
     func gridItems(cardWidth: CGFloat?, cardHeight: CGFloat?) -> some View {
         ForEach(items) { category in
-            NAGridViewV6CardView(category: category)
-                .frame(width: cardWidth, height: cardHeight)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    onItemTap?(category)
-                }
+            NAGridViewV6CardView(
+                category: category,
+                cardShape: cardShape,
+                overrideBackgroundColor: backgroundColor
+            )
+            .frame(width: cardWidth, height: cardHeight)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onItemTap?(category)
+            }
         }
     }
 }
@@ -111,9 +139,21 @@ private extension NAGridViewV6 {
 // MARK: - Individual Fresh Card View
 public struct NAGridViewV6CardView: View {
     public let category: NAGridViewV6Model
+    public var cardShape: NACardShape
+    public var overrideBackgroundColor: Color?
     
-    public init(category: NAGridViewV6Model) {
+    public init(
+        category: NAGridViewV6Model,
+        cardShape: NACardShape = .roundedRectangle(cornerRadius: 20),
+        overrideBackgroundColor: Color? = nil
+    ) {
         self.category = category
+        self.cardShape = cardShape
+        self.overrideBackgroundColor = overrideBackgroundColor
+    }
+    
+    private var effectiveBackgroundColor: Color {
+        overrideBackgroundColor ?? category.backgroundColor
     }
     
     public var body: some View {
@@ -145,14 +185,14 @@ public struct NAGridViewV6CardView: View {
         }
         .frame(maxWidth: .infinity)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(category.backgroundColor)
+            RoundedRectangle(cornerRadius: cardShape.cornerRadius, style: .continuous)
+                .fill(effectiveBackgroundColor)
         )
         .clipShape(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: cardShape.cornerRadius, style: .continuous)
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: cardShape.cornerRadius, style: .continuous)
                 .strokeBorder(
                     Color.gray.opacity(0.2),
                     lineWidth: 0.75
@@ -162,33 +202,43 @@ public struct NAGridViewV6CardView: View {
 }
 
 // MARK: - Default Mock Data
-extension NAGridViewV4 {
+extension NAGridViewV6 {
     public static let defaultCategories: [NAGridViewV6Model] = [
-        NAGridViewV6Model(title: "Marine/\nSea", productImageName: "fish"),
-        NAGridViewV6Model(title: "Freshwater\n/Lake", productImageName: "fish"),
-        NAGridViewV6Model(title: "Crab", productImageName: "fish"),
-        NAGridViewV6Model(title: "Prawns/\nShell Fish", productImageName: "fish"),
-        NAGridViewV6Model(title: "Exotic", productImageName: "fish"),
-        NAGridViewV6Model(title: "Boneless", productImageName: "fish"),
-        NAGridViewV6Model(title: "Steaks", productImageName: "fish"),
-        NAGridViewV6Model(title: "Dry Fish", productImageName: "fish"),
-        NAGridViewV6Model(title: "Freshly Frozen", productImageName: "fish")
+        NAGridViewV6Model(
+            title: "Chicken & Poultry",
+            productImageName: "fish"
+        ),
+        NAGridViewV6Model(
+            title: "Fresh Mutton",
+            productImageName: "fish"
+        ),
+        NAGridViewV6Model(
+            title: "Fish & Seafood",
+            productImageName: "fish"
+        ),
+        NAGridViewV6Model(
+            title: "Eggs & Special Cuts",
+            productImageName: "fish"
+        )
     ]
 }
 
-// MARK: - Preview Setup Engine
-#Preview("Vertical Grid (2 Columns)") {
-    NAGridViewV6(
-        rowCount: 0,
-        columnCount: 3,
-        scrollDirection: .vertical
-    )
+// MARK: - Usage Example
+struct NAGridViewV6DemoScreen: View {
+    var body: some View {
+        NAGridViewV6(
+            items: NAGridViewV6.defaultCategories,
+            orientation: .vertical,
+            gridCount: 3,
+            spacing: 10,
+            cardShape: .capsule,
+            backgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
+        ) { selectedCategory in
+        
+        }
+    }
 }
 
-#Preview("Horizontal Grid (2 Rows)") {
-    NAGridViewV6(
-        rowCount: 3,
-        columnCount: 0,
-        scrollDirection: .horizontal
-    )
+#Preview {
+    NAGridViewV6DemoScreen()
 }

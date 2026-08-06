@@ -8,108 +8,107 @@
 import SwiftUI
 
 // MARK: - Models
-struct NAStaggeredGridViewV1Model: Identifiable, Hashable {
-    let id = UUID()
-    let title: String
-    let subtitle: String?
-    let discountText: String?
-    let originalPrice: Int?
-    let currentPrice: Int?
-    let productImages: [String]
-    let cardType: CardVariant
+public struct NAStaggeredGridViewV1Model: Identifiable, Hashable {
+    public let id: UUID
+    public let title: String
+    public let subtitle: String?
+    public let discountText: String?
+    public let originalPrice: Int?
+    public let currentPrice: Int?
+    public let productImages: [String]
+    public let cardType: CardVariant
     
-    enum CardVariant {
+    public enum CardVariant: Hashable {
         case topDeals
         case standardOffer
         case promoBanner
+    }
+
+    public init(
+        id: UUID = UUID(),
+        title: String,
+        subtitle: String? = nil,
+        discountText: String? = nil,
+        originalPrice: Int? = nil,
+        currentPrice: Int? = nil,
+        productImages: [String],
+        cardType: CardVariant = .standardOffer
+    ) {
+        self.id = id
+        self.title = title
+        self.subtitle = subtitle
+        self.discountText = discountText
+        self.originalPrice = originalPrice
+        self.currentPrice = currentPrice
+        self.productImages = productImages
+        self.cardType = cardType
     }
 }
 
 // MARK: - Main Grid Layout Canvas View
 public struct NAStaggeredGridViewV1: View {
-    let gridDeals = [
-        NAStaggeredGridViewV1Model(
-            title: "Chicken",
-            subtitle: nil,
-            discountText: "6% OFF",
-            originalPrice: nil,
-            currentPrice: nil,
-            productImages: ["chicken_product", "chicken_product", "chicken_product"],
-            cardType: .standardOffer
-        ),
-        NAStaggeredGridViewV1Model(
-            title: "Mutton",
-            subtitle: nil,
-            discountText: "10% OFF",
-            originalPrice: nil,
-            currentPrice: nil,
-            productImages: ["chicken_product", "chicken_product", "chicken_product"],
-            cardType: .standardOffer
-        ),
-        NAStaggeredGridViewV1Model(
-            title: "Eggs",
-            subtitle: nil,
-            discountText: "5% OFF",
-            originalPrice: nil,
-            currentPrice: nil,
-            productImages: ["chicken_product", "chicken_product", "chicken_product"],
-            cardType: .standardOffer
-        ),
-        NAStaggeredGridViewV1Model(
-            title: "BIG BRANDS\nBIG OFFERS",
-            subtitle: nil,
-            discountText: nil,
-            originalPrice: nil,
-            currentPrice: nil,
-            productImages: ["chicken_product"],
-            cardType: .promoBanner
-        )
-    ]
+    public var heroDeal: NAStaggeredGridViewV1Model
+    public var gridDeals: [NAStaggeredGridViewV1Model]
+    public var gridSpacing: CGFloat
+    public var horizontalPadding: CGFloat
+    public var verticalPadding: CGFloat
+    public var backgroundColor: Color
+    public var onItemTap: ((NAStaggeredGridViewV1Model) -> Void)?
     
-    let heroDeal = NAStaggeredGridViewV1Model(
-        title: "TOP\nDEALS",
-        subtitle: "Tinted Lip\nBalm",
-        discountText: nil,
-        originalPrice: 299,
-        currentPrice: 229,
-        productImages: ["chicken_product", "chicken_product"],
-        cardType: .topDeals
-    )
-    
-    public init() {}
+    public init(
+        heroDeal: NAStaggeredGridViewV1Model = NAStaggeredGridViewV1.defaultHeroDeal,
+        gridDeals: [NAStaggeredGridViewV1Model] = NAStaggeredGridViewV1.defaultGridDeals,
+        gridSpacing: CGFloat = 8,
+        horizontalPadding: CGFloat = 16,
+        verticalPadding: CGFloat = 16,
+        backgroundColor: Color = Color(red: 242/255, green: 242/255, blue: 244/255),
+        onItemTap: ((NAStaggeredGridViewV1Model) -> Void)? = nil
+    ) {
+        self.heroDeal = heroDeal
+        self.gridDeals = gridDeals
+        self.gridSpacing = gridSpacing
+        self.horizontalPadding = horizontalPadding
+        self.verticalPadding = verticalPadding
+        self.backgroundColor = backgroundColor
+        self.onItemTap = onItemTap
+    }
     
     public var body: some View {
         GeometryReader { geometry in
-            let equalCardWidth = (geometry.size.width - 32) / 3
-            let gridSpacing: CGFloat = 8
+            let availableWidth = geometry.size.width - (horizontalPadding * 2) - (gridSpacing * 2)
+            let equalCardWidth = max(60, availableWidth / 3)
             let squareCardHeight = equalCardWidth
             let tallCardHeight = (squareCardHeight * 2) + gridSpacing
             
-            VStack(spacing: 0) {
-                HStack(alignment: .top, spacing: 8) {
-                    DynamicDealCardView(item: heroDeal)
-                        .frame(width: equalCardWidth, height: tallCardHeight)
-                    
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.fixed(equalCardWidth), spacing: gridSpacing),
-                            GridItem(.fixed(equalCardWidth), spacing: gridSpacing)
-                        ],
-                        spacing: gridSpacing
-                    ) {
-                        ForEach(gridDeals) { deal in
-                            DynamicDealCardView(item: deal)
-                                .frame(width: equalCardWidth, height: squareCardHeight)
-                        }
+            HStack(alignment: .top, spacing: gridSpacing) {
+                DynamicDealCardView(item: heroDeal)
+                    .frame(width: equalCardWidth, height: tallCardHeight)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        onItemTap?(heroDeal)
+                    }
+                
+                LazyVGrid(
+                    columns: [
+                        GridItem(.fixed(equalCardWidth), spacing: gridSpacing),
+                        GridItem(.fixed(equalCardWidth), spacing: gridSpacing)
+                    ],
+                    spacing: gridSpacing
+                ) {
+                    ForEach(gridDeals.prefix(4)) { deal in
+                        DynamicDealCardView(item: deal)
+                            .frame(width: equalCardWidth, height: squareCardHeight)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                onItemTap?(deal)
+                            }
                     }
                 }
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .background(Color(
-                red: 242/255,
-                green: 242/255,
-                blue: 244/255
-            ))
+            .padding(.horizontal, horizontalPadding)
+            .padding(.vertical, 60)
+            .frame(width: geometry.size.width, height: geometry.size.height, alignment: .center)
+            .background(backgroundColor)
         }
         .frame(height: calculatedTotalHeight(screenWidth: UIScreen.main.bounds.width))
         .fixedSize(horizontal: false, vertical: true)
@@ -118,12 +117,10 @@ public struct NAStaggeredGridViewV1: View {
     }
     
     private func calculatedTotalHeight(screenWidth: CGFloat) -> CGFloat {
-        let horizontalPadding: CGFloat = 24
-        let totalInnerSpacing: CGFloat = 16
-        let equalCardWidth = (screenWidth - horizontalPadding - totalInnerSpacing) / 3
-        let gridSpacing: CGFloat = 8
+        let availableWidth = screenWidth - (horizontalPadding * 2) - (gridSpacing * 2)
+        let equalCardWidth = max(60, availableWidth / 3)
         let tallCardHeight = (equalCardWidth * 2) + gridSpacing
-        return tallCardHeight + 36
+        return tallCardHeight + 16
     }
 }
 
@@ -170,34 +167,34 @@ struct DynamicDealCardView: View {
             
             switch item.cardType {
             case .topDeals:
-                VStack(spacing: 12) {
-                    Text(attributedString(for: item.title))
+                VStack(spacing: 8) {
+                    Text(item.title)
+                        .font(.system(size: 16, weight: .bold, design: .rounded))
                         .multilineTextAlignment(.center)
                         .lineLimit(2)
                         .foregroundColor(textCrimson)
-                        .lineSpacing(-6)
-                        .padding(.top, 14)
-                        .padding(.horizontal, 8)
+                        .padding(.top, 12)
+                        .padding(.horizontal, 6)
                         .fixedSize(horizontal: false, vertical: true)
                     
-                    VStack(spacing: 0) {
+                    VStack(spacing: 2) {
                         if let original = item.originalPrice {
                             Text("₹\(original)")
-                                .font(.system(size: 13, weight: .bold, design: .rounded))
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
                                 .strikethrough()
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
                                 .background(darkGreyBadge)
                                 .cornerRadius(6)
                         }
                         
                         if let current = item.currentPrice {
                             Text("₹\(current)")
-                                .font(.system(size: 20, weight: .bold, design: .rounded))
+                                .font(.system(size: 18, weight: .bold, design: .rounded))
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 5)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 4)
                                 .background(badgePink)
                                 .cornerRadius(8)
                         }
@@ -205,7 +202,7 @@ struct DynamicDealCardView: View {
                     
                     if let sub = item.subtitle {
                         Text(sub)
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .font(.system(size: 11, weight: .bold, design: .rounded))
                             .foregroundColor(darkGreyBadge)
                             .multilineTextAlignment(.center)
                     }
@@ -218,41 +215,40 @@ struct DynamicDealCardView: View {
             case .standardOffer:
                 VStack(alignment: .leading, spacing: 0) {
                     Text(item.title)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
                         .foregroundColor(.black)
                         .multilineTextAlignment(.center)
+                        .lineLimit(1)
                         .frame(maxWidth: .infinity)
-                        .padding(.top, 28)
+                        .padding(.top, 24)
                         .padding(.horizontal, 4)
-                        .frame(height: 64)
-                    
-                    Spacer(minLength: 2)
+                        .frame(height: 42)
                     
                     ScrollableImagesContainer(images: item.productImages)
-                        .frame(maxHeight: .infinity)
-                        .padding(.bottom, 6)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.bottom, 2)
                 }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(
                     HStack(spacing: 0) {
                         Text("Up to")
-                            .font(.system(size: 10, weight: .bold))
+                            .font(.system(size: 9, weight: .bold))
                             .foregroundColor(.white)
-                            .padding(.horizontal, 6)
+                            .padding(.horizontal, 4)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .background(darkGreyBadge)
                         
                         if let discount = item.discountText {
                             Text(discount)
-                                .font(.system(size: 10, weight: .bold))
+                                .font(.system(size: 9, weight: .bold))
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 6)
+                                .padding(.horizontal, 4)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .background(badgePink)
                         }
                     }
                     .frame(maxWidth: .infinity)
-                    .frame(height: 24)
+                    .frame(height: 20)
                     .clipShape(UnevenRoundedRectangle(
                         topLeadingRadius: 24,
                         bottomLeadingRadius: 0,
@@ -264,10 +260,12 @@ struct DynamicDealCardView: View {
                 
             case .promoBanner:
                 VStack(spacing: 0) {
-                    Image("chicken_product", bundle: .module)
-                        .resizable()
-                        .scaledToFit()
-                        .padding(.horizontal, 6)
+                    if let firstImg = item.productImages.first {
+                        Image(firstImg, bundle: .module)
+                            .resizable()
+                            .scaledToFit()
+                            .padding(.horizontal, 6)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(
@@ -289,30 +287,88 @@ struct DynamicDealCardView: View {
     }
 }
 
-// MARK: - Dynamic Paging Scrollable Image Engine
 struct ScrollableImagesContainer: View {
     let images: [String]
     
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 0) {
-                ForEach(images, id: \.self) { imgAsset in
-                    Image(imgAsset, bundle: .module)
-                        .resizable()
-                        .scaledToFit()
-                        .scaleEffect(1.5)
-                        .containerRelativeFrame(.horizontal, count: 1, spacing: 0)
+        GeometryReader { geo in
+            let cardWidth = geo.size.width
+            let cardHeight = geo.size.height
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 0) {
+                    ForEach(Array(images.enumerated()), id: \.offset) { _, imgAsset in
+                        Image(imgAsset, bundle: .module)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: cardWidth, height: cardHeight)
+                            .clipped()
+                    }
                 }
             }
+            .scrollTargetBehavior(.paging)
         }
-        .scrollTargetBehavior(.paging)
+        .clipped()
     }
 }
 
-// MARK: - Preview Setup Engine
+// MARK: - Default Input Parameters
+extension NAStaggeredGridViewV1 {
+    public static let defaultHeroDeal = NAStaggeredGridViewV1Model(
+        title: "TOP\nDEALS",
+        subtitle: "Fresh Meat\n& Poultry",
+        discountText: nil,
+        originalPrice: 299,
+        currentPrice: 229,
+        productImages: ["chicken_product", "chicken_product"],
+        cardType: .topDeals
+    )
+    
+    public static let defaultGridDeals: [NAStaggeredGridViewV1Model] = [
+        NAStaggeredGridViewV1Model(
+            title: "Chicken",
+            discountText: "6% OFF",
+            productImages: ["chicken_product", "chicken_product"],
+            cardType: .standardOffer
+        ),
+        NAStaggeredGridViewV1Model(
+            title: "Mutton",
+            discountText: "10% OFF",
+            productImages: ["chicken_product", "chicken_product"],
+            cardType: .standardOffer
+        ),
+        NAStaggeredGridViewV1Model(
+            title: "Fish",
+            discountText: "5% OFF",
+            productImages: ["chicken_product", "chicken_product"],
+            cardType: .standardOffer
+        ),
+        NAStaggeredGridViewV1Model(
+            title: "Eggs",
+            discountText: "8% OFF",
+            productImages: ["chicken_product", "chicken_product"],
+            cardType: .standardOffer
+        )
+    ]
+}
+
+struct NAStaggeredGridViewV1DemoScreen: View {
+    var body: some View {
+        NAStaggeredGridViewV1(
+            heroDeal: NAStaggeredGridViewV1.defaultHeroDeal,
+            gridDeals: NAStaggeredGridViewV1.defaultGridDeals,
+            gridSpacing: 10,
+            horizontalPadding: 16,
+            verticalPadding: 16
+        ) { selectedDeal in
+            print("Selected deal: \(selectedDeal.title)")
+        }
+    }
+}
+
 #Preview {
     List {
-        NAStaggeredGridViewV1()
+        NAStaggeredGridViewV1DemoScreen()
     }
     .listStyle(.plain)
     .listRowSpacing(0)

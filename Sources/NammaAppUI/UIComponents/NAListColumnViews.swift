@@ -22,20 +22,16 @@ struct NAListColumnViews: View {
     
     var body: some View {
         List {
-            NAStaggeredGridViewV1()
-            NASpotlightInRowViewV1()
             ForEach(0..<4) { item in
                 NAShopCardViewV1() {
                     
                 }
             }
-            NASpotlightInRowViewV1()
             ForEach(0..<3) { item in
                 NAShopCardViewV1() {
                     
                 }
             }
-            NASpotlightInRowViewV2()
         }
         .listStyle(.plain)
         .listRowSpacing(0)

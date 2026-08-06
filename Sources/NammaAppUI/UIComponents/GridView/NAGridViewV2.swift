@@ -61,53 +61,85 @@ public struct NAGridViewV2: View {
     public let orientation: GridOrientation
     public let gridCount: Int
     public let spacing: CGFloat
-    public let cardWidth: CGFloat?
+    public let backgroundColor: Color
+    public var onClickAdd: ((NAGridViewV2Model) -> Void)?
+    public var onClickRemove: ((NAGridViewV2Model) -> Void)?
+    public var onClickInitialAdd: ((NAGridViewV2Model) -> Void)?
+    public var onClickFavourite: ((NAGridViewV2Model) -> Void)?
+    public var onItemTap: ((NAGridViewV2Model) -> Void)?
     
     public init(
         items: Binding<[NAGridViewV2Model]>,
         orientation: GridOrientation = .horizontal,
         gridCount: Int = 1,
         spacing: CGFloat = 12,
-        cardWidth: CGFloat? = 140
+        backgroundColor: Color,
+        onClickAdd: ((NAGridViewV2Model) -> Void)? = nil,
+        onClickRemove: ((NAGridViewV2Model) -> Void)? = nil,
+        onClickInitialAdd: ((NAGridViewV2Model) -> Void)? = nil,
+        onClickFavourite: ((NAGridViewV2Model) -> Void)? = nil,
+        onItemTap: ((NAGridViewV2Model) -> Void)? = nil
     ) {
         self._items = items
         self.orientation = orientation
         self.gridCount = gridCount
         self.spacing = spacing
-        self.cardWidth = cardWidth
+        self.backgroundColor = backgroundColor
+        self.onClickAdd = onClickAdd
+        self.onClickRemove = onClickRemove
+        self.onClickInitialAdd = onClickInitialAdd
+        self.onClickFavourite = onClickFavourite
+        self.onItemTap = onItemTap
     }
     
-    private var gridItems: [GridItem] {
+    private func calculatedCardWidth(containerWidth: CGFloat) -> CGFloat {
         switch orientation {
         case .vertical:
-            return Array(repeating: GridItem(.flexible(), spacing: spacing), count: max(1, gridCount))
+            let totalPadding = spacing * CGFloat(gridCount + 1)
+            let availableWidth = containerWidth - totalPadding
+            return max(80, availableWidth / CGFloat(max(1, gridCount)))
+            
         case .horizontal:
-            return Array(repeating: GridItem(.fixed(320), spacing: spacing), count: max(1, gridCount))
+            return max(140, containerWidth * 0.40)
+        }
+    }
+    
+    private func gridItems(calculatedWidth: CGFloat) -> [GridItem] {
+        switch orientation {
+        case .vertical:
+            return Array(repeating: GridItem(.flexible(minimum: calculatedWidth), spacing: spacing), count: max(1, gridCount))
+        case .horizontal:
+            let estimatedTotalCardHeight = calculatedWidth + 180
+            return Array(repeating: GridItem(.fixed(estimatedTotalCardHeight), spacing: spacing), count: max(1, gridCount))
         }
     }
     
     public var body: some View {
-        Group {
-            switch orientation {
-            case .vertical:
-                ScrollView(.vertical, showsIndicators: false) {
-                    LazyVGrid(columns: gridItems, alignment: .leading, spacing: spacing) {
-                        ForEach($items) { $product in
-                            NAGridViewV2CardView(product: $product, orientation: orientation, cardWidth: cardWidth)
+        GeometryReader { geometry in
+            let dynamicWidth = calculatedCardWidth(containerWidth: geometry.size.width)
+            
+            Group {
+                switch orientation {
+                case .vertical:
+                    ScrollView(.vertical, showsIndicators: false) {
+                        LazyVGrid(columns: gridItems(calculatedWidth: dynamicWidth), alignment: .leading, spacing: spacing) {
+                            ForEach($items) { $product in
+                                NAGridViewV2CardView(product: $product, orientation: orientation, backgroundColor: backgroundColor, cardWidth: dynamicWidth)
+                            }
                         }
+                        .padding(.horizontal, spacing)
                     }
-                    .padding(.horizontal, spacing)
-                }
-                
-            case .horizontal:
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHGrid(rows: gridItems, alignment: .top, spacing: spacing) {
-                        ForEach($items) { $product in
-                            NAGridViewV2CardView(product: $product, orientation: orientation, cardWidth: cardWidth)
-                                .frame(width: cardWidth)
+                    
+                case .horizontal:
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHGrid(rows: gridItems(calculatedWidth: dynamicWidth), alignment: .top, spacing: spacing) {
+                            ForEach($items) { $product in
+                                NAGridViewV2CardView(product: $product, orientation: orientation, backgroundColor: backgroundColor, cardWidth: dynamicWidth)
+                                    .frame(width: dynamicWidth)
+                            }
                         }
+                        .padding(.horizontal, spacing)
                     }
-                    .padding(.horizontal, spacing)
                 }
             }
         }
@@ -118,11 +150,11 @@ public struct NAGridViewV2: View {
 public struct NAGridViewV2CardView: View {
     @Binding public var product: NAGridViewV2Model
     public var orientation: GridOrientation = .horizontal
-    public var cardWidth: CGFloat? = 140
+    public var backgroundColor: Color
+    public var cardWidth: CGFloat?
     
     public var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-
             ZStack {
                 Image(product.productImage, bundle: .module)
                     .resizable()
@@ -137,7 +169,7 @@ public struct NAGridViewV2CardView: View {
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(.pink)
                                 .padding(6)
-                                .background(Color.white.opacity(0.6))
+                                .background(Color.white.opacity(0.8))
                                 .clipShape(Circle())
                         }
                         .padding(6)
@@ -169,7 +201,7 @@ public struct NAGridViewV2CardView: View {
                             .padding(.horizontal, 8)
                             .padding(.vertical, 8)
                             .background(Color(red: 226/255, green: 18/255, blue: 73/255))
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                             .padding(6)
                             
                         } else {
@@ -178,12 +210,6 @@ public struct NAGridViewV2CardView: View {
                                     Text("ADD")
                                         .font(.system(size: 11, weight: .bold))
                                         .foregroundColor(.pink)
-                                    
-                                    if product.hasOptions {
-                                        Text("2 options")
-                                            .font(.system(size: 8))
-                                            .foregroundColor(.gray)
-                                    }
                                 }
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 8)
@@ -200,14 +226,11 @@ public struct NAGridViewV2CardView: View {
                     }
                 }
             }
-            .frame(
-                width: orientation == .horizontal ? (cardWidth ?? 140) : nil,
-                height: orientation == .horizontal ? (cardWidth ?? 140) : nil
-            )
-            .aspectRatio(orientation == .vertical ? 1.0 : nil, contentMode: .fit)
-            .background(Color.green.opacity(0.08))
+            .frame(maxWidth: .infinity)
+            .frame(height: cardWidth ?? 140)
+            .background(backgroundColor)
             .clipShape(RoundedRectangle(cornerRadius: 14))
-            
+
             HStack(alignment: .center, spacing: 6) {
                 Text("₹\(product.currentPrice)")
                     .font(.system(size: 12, weight: .bold))
@@ -274,17 +297,15 @@ public struct NAGridViewV2CardView: View {
                 }
                 .padding(.top, 2)
             }
+            Spacer()
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+        
     }
 }
-
 // MARK: - Demo Screen
 struct NAGridViewV2DemoScreen: View {
-    @State private var orientation: GridOrientation = .horizontal
-    @State private var gridCount: Int = 2
-    
-    @State private var products = [
+    @State private var items = [
         NAGridViewV2Model(
             title: "Blue Heaven Intense Matte Lipstick | Plum Desire 05",
             volumeInfo: "1 pc (4 g)",
@@ -314,71 +335,43 @@ struct NAGridViewV2DemoScreen: View {
             promotionText: nil
         ),
         NAGridViewV2Model(
-            title: "Insight Cosmetics Non Transfer Liquid Lipstick",
-            volumeInfo: "1 pc (4 ml)",
-            finishTag: "SPF 15",
-            currentPrice: 121,
-            originalPrice: 130,
-            discountText: "₹9 OFF",
-            rating: 4.1,
-            ratingCountText: "(2k)",
+            title: "Lakme Forever Matte Liquid Lip, 16hr Lipstick, Light weight",
+            volumeInfo: "5.6 ml",
+            finishTag: "Matte Finish",
+            currentPrice: 326,
+            originalPrice: 450,
+            discountText: "₹124 OFF",
+            rating: 4.4,
+            ratingCountText: "(1k)",
             productImage: "vegetables",
             quantity: 0,
             hasOptions: true,
             promotionText: nil
-        ),
-        NAGridViewV2Model(
-            title: "Maybelline New York Superstay Matte Ink Liquid Lipstick",
-            volumeInfo: "5 ml",
-            finishTag: "Matte Finish",
-            currentPrice: 499,
-            originalPrice: 650,
-            discountText: "₹151 OFF",
-            rating: 4.5,
-            ratingCountText: "(5k)",
-            productImage: "vegetables",
-            quantity: 0,
-            hasOptions: true,
-            promotionText: "Flat 20% OFF"
-        ),
-        NAGridViewV2Model(
-            title: "Insight Cosmetics Non Transfer Liquid Lipstick",
-            volumeInfo: "1 pc (4 ml)",
-            finishTag: "SPF 15",
-            currentPrice: 121,
-            originalPrice: 130,
-            discountText: "₹9 OFF",
-            rating: 4.1,
-            ratingCountText: "(2k)",
-            productImage: "vegetables",
-            quantity: 0,
-            hasOptions: true,
-            promotionText: nil
-        ),
-        NAGridViewV2Model(
-            title: "Maybelline New York Superstay Matte Ink Liquid Lipstick",
-            volumeInfo: "5 ml",
-            finishTag: "Matte Finish",
-            currentPrice: 499,
-            originalPrice: 650,
-            discountText: "₹151 OFF",
-            rating: 4.5,
-            ratingCountText: "(5k)",
-            productImage: "vegetables",
-            quantity: 0,
-            hasOptions: true,
-            promotionText: "Flat 20% OFF"
         )
     ]
     
     var body: some View {
         NAGridViewV2(
-            items: $products,
-            orientation: orientation,
-            gridCount: gridCount,
-            spacing: 12,
-            cardWidth: 140
-        )
+            items: $items,
+            orientation: .vertical,
+            gridCount: 2,
+            spacing: 10,
+            backgroundColor: Color.green.opacity(0.08),
+            onClickAdd: { item in
+                
+            },
+            onClickRemove: { item in
+               
+            },
+            onClickInitialAdd: { item in
+               
+            },
+            onClickFavourite: { item in
+               
+            }
+        ) { selectedItem in
+            
+        }
     }
 }
 

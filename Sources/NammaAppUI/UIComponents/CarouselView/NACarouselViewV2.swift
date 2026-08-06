@@ -7,28 +7,32 @@
 
 import SwiftUI
 
-// MARK: - Banner Item Model
+// MARK: - Fully Dynamic Carousel Card Data Model
 public struct NACarouselV2Model: Identifiable, Hashable {
-    public let id = UUID()
-    public let title: String
-    public let subtitle: String
-    public let buttonText: String
-    public let backgroundColor: Color
-    public let textColor: Color
-    public let buttonBgColor: Color
-    public let buttonTextColor: Color
-    public let bannerImageName: String
+    public let id: UUID
+    public var title: String
+    public var subtitle: String?
+    public var buttonText: String?
+    public var backgroundColor: Color
+    public var textColor: Color
+    public var buttonBgColor: Color
+    public var buttonTextColor: Color
+    public var bannerImageName: String
+    public var isSystemImage: Bool
     
     public init(
+        id: UUID = UUID(),
         title: String,
-        subtitle: String,
-        buttonText: String = "SHOP NOW",
-        backgroundColor: Color,
-        textColor: Color = .white,
+        subtitle: String? = nil,
+        buttonText: String? = "SHOP NOW",
+        backgroundColor: Color = Color(red: 236/255, green: 225/255, blue: 220/255),
+        textColor: Color = Color(red: 60/255, green: 20/255, blue: 20/255),
         buttonBgColor: Color = .white,
         buttonTextColor: Color = .black,
-        bannerImageName: String
+        bannerImageName: String,
+        isSystemImage: Bool = false
     ) {
+        self.id = id
         self.title = title
         self.subtitle = subtitle
         self.buttonText = buttonText
@@ -37,11 +41,12 @@ public struct NACarouselV2Model: Identifiable, Hashable {
         self.buttonBgColor = buttonBgColor
         self.buttonTextColor = buttonTextColor
         self.bannerImageName = bannerImageName
+        self.isSystemImage = isSystemImage
     }
 }
 
 public struct NACarouselViewV2: View {
-    let products = [
+    let items = [
         NACarouselV2Model(
             title: "Care You Can\nCount On",
             subtitle: "Feminine hygiene picks designed for ease & comfort",
@@ -83,13 +88,13 @@ public struct NACarouselViewV2: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: gridRows, alignment: .top, spacing: 12) {
-                    ForEach(products) { item in
+                    ForEach(items) { item in
                         NACarouselCardViewV2(item: item) {
                             
                         }
                         .frame(width: screenWidth/1.25)
                     }
-                }
+                } 
                 .padding(.horizontal, 12)
             }
         }

@@ -7,87 +7,111 @@
 
 import SwiftUI
 
-// MARK: - Models
-public struct TabbarCategoryV1Model: Identifiable, Hashable {
-    public init(title: String, imageName: String) {
+// MARK: - Generic Dynamic Tab Model
+public struct NATabItemModel: Identifiable, Hashable {
+    public let id: String
+    public let title: String
+    public let iconName: String
+    public let isSystemIcon: Bool
+    
+    public init(id: String, title: String, iconName: String, isSystemIcon: Bool = true) {
+        self.id = id
         self.title = title
-        self.imageName = imageName
-    }
-    
-    public let id = UUID()
-    let title: String
-    let imageName: String
-}
-
-public enum NammaShopCategoryTabRoute: String, CaseIterable, Identifiable {
-    case all
-    case grocery
-    case fresh
-    case meat
-    case fish
-    
-    public var id: String { self.rawValue }
-    
-    public var title: String {
-        switch self {
-        case .all: return "All"
-        case .grocery: return "Grocery"
-        case .fresh: return "Fresh"
-        case .meat: return "Meat"
-        case .fish: return "Fish"
-        }
-    }
-    
-    public var iconName: String {
-        switch self {
-        case .all: return "square.grid.2x2.fill"
-        case .grocery: return "basket.fill"
-        case .fresh: return "leaf.fill"
-        case .meat: return "fork.knife"
-        case .fish: return "fish.fill"
-        }
+        self.iconName = iconName
+        self.isSystemIcon = isSystemIcon
     }
 }
 
+// MARK: - Dynamic Tabbar Component
 public struct NATabbarViewV1: View {
+    public var items: [NATabItemModel]
+    @Binding public var selectedTabId: String
+    
+    public var itemWidth: CGFloat
+    public var itemSpacing: CGFloat
+    public var iconSize: CGFloat
+    public var fontSize: CGFloat
+    public var indicatorHeight: CGFloat
 
-    @Binding var selectedRoute: NammaShopCategoryTabRoute
+    public var activeColor: Color
+    public var inactiveColor: Color
+    public var indicatorColor: Color
+    public var dividerColor: Color
+    public var backgroundColor: Color
+    public var horizontalPadding: CGFloat
+    
+    public var onTabSelected: ((NATabItemModel) -> Void)?
+    
     @Namespace private var categoryBarNamespace
     
-    public init(selectedRoute: Binding<NammaShopCategoryTabRoute>) {
-        self._selectedRoute = selectedRoute
+    public init(
+        items: [NATabItemModel] = NATabbarViewV1.defaultTabs,
+        selectedTabId: Binding<String>,
+        itemWidth: CGFloat = 76,
+        itemSpacing: CGFloat = 8,
+        iconSize: CGFloat = 16,
+        fontSize: CGFloat = 11,
+        indicatorHeight: CGFloat = 4,
+        activeColor: Color = .black,
+        inactiveColor: Color = .black.opacity(0.6),
+        indicatorColor: Color = .black,
+        dividerColor: Color = .white.opacity(0.12),
+        backgroundColor: Color = .clear,
+        horizontalPadding: CGFloat = 16,
+        onTabSelected: ((NATabItemModel) -> Void)? = nil
+    ) {
+        self.items = items
+        self._selectedTabId = selectedTabId
+        self.itemWidth = itemWidth
+        self.itemSpacing = itemSpacing
+        self.iconSize = iconSize
+        self.fontSize = fontSize
+        self.indicatorHeight = indicatorHeight
+        self.activeColor = activeColor
+        self.inactiveColor = inactiveColor
+        self.indicatorColor = indicatorColor
+        self.dividerColor = dividerColor
+        self.backgroundColor = backgroundColor
+        self.horizontalPadding = horizontalPadding
+        self.onTabSelected = onTabSelected
     }
     
     public var body: some View {
         ZStack(alignment: .bottom) {
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(NammaShopCategoryTabRoute.allCases) { route in
-                            let isSelected = route == selectedRoute
+                    HStack(spacing: itemSpacing) {
+                        ForEach(items) { item in
+                            let isSelected = item.id == selectedTabId
                             
                             VStack(spacing: 6) {
-                                Image(systemName: route.iconName)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 16, height: 16)
-                                    .foregroundColor(isSelected ? .black : .black.opacity(0.6))
-                                    .padding(.top, 6)
+                                Group {
+                                    if item.isSystemIcon {
+                                        Image(systemName: item.iconName)
+                                            .resizable()
+                                            .scaledToFit()
+                                    } else {
+                                        Image(item.iconName, bundle: .module)
+                                            .resizable()
+                                            .scaledToFit()
+                                    }
+                                }
+                                .frame(width: iconSize, height: iconSize)
+                                .foregroundColor(isSelected ? activeColor : inactiveColor)
+                                .padding(.top, 6)
                                 
-                                Text(route.title)
+                                Text(item.title)
                                     .font(
                                         .system(
-                                            size: 11,
+                                            size: fontSize,
                                             weight: isSelected ? .bold : .medium
                                         )
                                     )
-                                    .foregroundColor(
-                                        isSelected ? .black : .black.opacity(0.6)
-                                    )
+                                    .foregroundColor(isSelected ? activeColor : inactiveColor)
                                     .multilineTextAlignment(.center)
                                     .padding(.bottom, 4)
-                                    .animation(.none, value: selectedRoute)
-                                
+                                    .animation(.none, value: selectedTabId)
+
                                 ZStack {
                                     if isSelected {
                                         UnevenRoundedRectangle(
@@ -97,8 +121,8 @@ public struct NATabbarViewV1: View {
                                             topTrailingRadius: 32,
                                             style: .continuous
                                         )
-                                        .fill(Color.black)
-                                        .frame(height: 4)
+                                        .fill(indicatorColor)
+                                        .frame(height: indicatorHeight)
                                         .matchedGeometryEffect(
                                             id: "activeTabLine",
                                             in: categoryBarNamespace
@@ -106,42 +130,72 @@ public struct NATabbarViewV1: View {
                                     } else {
                                         Rectangle()
                                             .fill(Color.clear)
-                                            .frame(height: 4)
+                                            .frame(height: indicatorHeight)
                                     }
                                 }
                             }
-                            .frame(width: 76)
+                            .frame(width: itemWidth)
                             .contentShape(Rectangle())
-                            .id(route)
+                            .id(item.id)
                             .onTapGesture {
                                 withAnimation(
                                     .spring(response: 0.35, dampingFraction: 0.75)
                                 ) {
-                                    selectedRoute = route
-                                    proxy.scrollTo(route, anchor: .center)
+                                    selectedTabId = item.id
+                                    proxy.scrollTo(item.id, anchor: .center)
                                 }
+                                onTabSelected?(item)
                             }
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, horizontalPadding)
                 }
             }
+            .background(backgroundColor)
             
             Rectangle()
-                .fill(Color.white.opacity(0.12))
+                .fill(dividerColor)
                 .frame(height: 1)
         }
     }
 }
 
-// MARK: - Preview Setup Engine
+// MARK: - Default Mock Data Extension
+extension NATabbarViewV1 {
+    public static let defaultTabs: [NATabItemModel] = [
+        NATabItemModel(id: "all", title: "All", iconName: "square.grid.2x2.fill"),
+        NATabItemModel(id: "grocery", title: "Grocery", iconName: "basket.fill"),
+        NATabItemModel(id: "fresh", title: "Fresh", iconName: "leaf.fill"),
+        NATabItemModel(id: "meat", title: "Meat", iconName: "fork.knife"),
+        NATabItemModel(id: "fish", title: "Fish", iconName: "fish.fill")
+    ]
+}
+
+// MARK: - Interactive Dynamic Preview
 #Preview {
     struct PreviewWrapper: View {
-        @State private var route: NammaShopCategoryTabRoute = .all
+        @State private var selectedTab = "meat"
+        
+        let tabOptions = [
+            NATabItemModel(id: "meat", title: "Fresh Meat", iconName: "fork.knife"),
+            NATabItemModel(id: "chicken", title: "Chicken", iconName: "bird.fill"),
+            NATabItemModel(id: "seafood", title: "Seafood", iconName: "fish.fill"),
+            NATabItemModel(id: "eggs", title: "Eggs", iconName: "oval.fill"),
+            NATabItemModel(id: "combos", title: "Combos", iconName: "tag.fill"),
+            NATabItemModel(id: "spices", title: "Spices", iconName: "flame.fill")
+        ]
         
         var body: some View {
-            VStack {
-                NATabbarViewV1(selectedRoute: $route)
+            NATabbarViewV1(
+                items: tabOptions,
+                selectedTabId: $selectedTab,
+                itemWidth: 85,
+                activeColor: .white,
+                inactiveColor: .gray,
+                indicatorColor: Color(red: 236/255, green: 18/255, blue: 90/255),
+                backgroundColor: Color(red: 20/255, green: 20/255, blue: 20/255)
+            ) { selected in
+               
             }
         }
     }

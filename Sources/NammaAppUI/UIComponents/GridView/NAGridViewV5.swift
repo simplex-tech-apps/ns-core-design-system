@@ -24,16 +24,14 @@ public struct NAGridViewV5Model: Identifiable, Equatable {
 public enum NAGridCardShape {
     case square
     case rectangle
-    
-    /// Image aspect ratio for internal ZStack
+
     var imageAspectRatio: CGFloat {
         switch self {
         case .square: return 1.0
         case .rectangle: return 0.85
         }
     }
-    
-    /// Default card aspect ratio (width / height)
+
     var defaultCardAspectRatio: CGFloat {
         switch self {
         case .square: return 0.85
@@ -47,14 +45,13 @@ public struct NAGridViewV5: View {
     
     public var items: [NAGridViewV5Model]
     public var orientation: NAGridOrientation
-    public var gridCount: Int // Columns (if vertical) or Rows (if horizontal)
+    public var gridCount: Int
     public var spacing: CGFloat
     public var cardShape: NAGridCardShape
-    public var cardBackgroundColor: Color
+    public var backgroundColor: Color
     public var baseCardHeight: CGFloat
     public var onItemTap: ((NAGridViewV5Model) -> Void)?
     
-    /// Computed width-to-height ratio based on selected cardShape
     public var cardAspectRatio: CGFloat {
         cardShape.defaultCardAspectRatio
     }
@@ -65,7 +62,7 @@ public struct NAGridViewV5: View {
         gridCount: Int = 4,
         spacing: CGFloat = 10,
         cardShape: NAGridCardShape = .rectangle,
-        cardBackgroundColor: Color = Color(red: 238/255, green: 244/255, blue: 252/255),
+        backgroundColor: Color = Color(red: 238/255, green: 244/255, blue: 252/255),
         baseCardHeight: CGFloat = 130,
         onItemTap: ((NAGridViewV5Model) -> Void)? = nil
     ) {
@@ -74,7 +71,7 @@ public struct NAGridViewV5: View {
         self.gridCount = max(1, gridCount)
         self.spacing = spacing
         self.cardShape = cardShape
-        self.cardBackgroundColor = cardBackgroundColor
+        self.backgroundColor = backgroundColor
         self.baseCardHeight = baseCardHeight
         self.onItemTap = onItemTap
     }
@@ -124,7 +121,7 @@ private extension NAGridViewV5 {
             NAGridViewV5CardView(
                 category: category,
                 cardShape: cardShape,
-                backgroundColor: cardBackgroundColor
+                backgroundColor: backgroundColor
             )
             .frame(width: cardWidth, height: cardHeight)
             .contentShape(Rectangle())
@@ -199,7 +196,7 @@ extension NAGridViewV5 {
         gridCount: 4,
         spacing: 10,
         cardShape: .rectangle,
-        cardBackgroundColor: Color(red: 238/255, green: 244/255, blue: 252/255)
+        backgroundColor: Color(red: 238/255, green: 244/255, blue: 252/255)
     )
 }
 
@@ -210,7 +207,7 @@ extension NAGridViewV5 {
         gridCount: 2,
         spacing: 10,
         cardShape: .rectangle,
-        cardBackgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
+        backgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
     )
 }
 
@@ -221,7 +218,7 @@ extension NAGridViewV5 {
         gridCount: 4,
         spacing: 10,
         cardShape: .square,
-        cardBackgroundColor: Color(red: 218/255, green: 247/255, blue: 194/255)
+        backgroundColor: Color(red: 218/255, green: 247/255, blue: 194/255)
     )
 }
 
@@ -232,6 +229,8 @@ extension NAGridViewV5 {
         gridCount: 2,
         spacing: 10,
         cardShape: .rectangle,
-        cardBackgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
-    )
+        backgroundColor: Color(red: 232/255, green: 245/255, blue: 233/255)
+    ) {_ in 
+        
+    }
 }
