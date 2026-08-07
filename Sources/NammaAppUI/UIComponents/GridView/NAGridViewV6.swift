@@ -160,7 +160,7 @@ public struct NAGridViewV6CardView: View {
         ZStack(alignment: .bottomTrailing) {
             VStack(alignment: .leading, spacing: 0) {
                 Text(category.title)
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundColor(Color(red: 44/255, green: 53/255, blue: 71/255))
                     .multilineTextAlignment(.leading)
                     .lineLimit(2)

@@ -36,6 +36,7 @@ public struct NATabbarViewV2: View {
     public var fontSize: CGFloat
     public var indicatorHeight: CGFloat
     public var spacing: CGFloat
+    public var height: CGFloat
 
     public var activeIconBoxBackground: Color
     public var inactiveIconBoxBackground: Color
@@ -70,6 +71,7 @@ public struct NATabbarViewV2: View {
         backgroundColor: Color = .clear,
         horizontalPadding: CGFloat = 16,
         spacing: CGFloat = 0,
+        height: CGFloat = 28,
         onCategorySelected: ((NATabCategoryItemModel) -> Void)? = nil
     ) {
         self.categories = categories
@@ -92,6 +94,7 @@ public struct NATabbarViewV2: View {
         self.horizontalPadding = horizontalPadding
         self.onCategorySelected = onCategorySelected
         self.spacing = spacing
+        self.height = height
     }
     
     public var body: some View {
@@ -135,7 +138,7 @@ public struct NATabbarViewV2: View {
                                     .multilineTextAlignment(.center)
                                     .lineLimit(2)
                                     .fixedSize(horizontal: false, vertical: true)
-                                    .frame(height: 28, alignment: .top)
+                                    .frame(height: height, alignment: .top)
                                     .animation(.none, value: selectedCategoryId)
 
                                 ZStack {
